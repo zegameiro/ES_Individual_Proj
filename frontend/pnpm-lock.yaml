@@ -8,6 +8,9 @@ dependencies:
   '@nextui-org/react':
     specifier: ^2.4.8
     version: 2.4.8(@types/react@18.3.10)(framer-motion@11.9.0)(react-dom@18.3.1)(react@18.3.1)(tailwindcss@3.4.13)
+  '@react-oauth/google':
+    specifier: ^0.12.1
+    version: 0.12.1(react-dom@18.3.1)(react@18.3.1)
   '@tanstack/react-query':
     specifier: ^5.56.2
     version: 5.56.2(react@18.3.1)
@@ -2797,6 +2800,16 @@ packages:
       '@react-types/shared': 3.24.1(react@18.3.1)
       '@swc/helpers': 0.5.13
       react: 18.3.1
+    dev: false
+
+  /@react-oauth/google@0.12.1(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-qagsy22t+7UdkYAiT5ZhfM4StXi9PPNvw0zuwNmabrWyMKddczMtBIOARflbaIj+wHiQjnMAsZmzsUYuXeyoSg==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     dev: false
 
   /@react-stately/calendar@3.5.1(react@18.3.1):
