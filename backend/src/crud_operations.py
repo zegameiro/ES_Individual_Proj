@@ -9,13 +9,8 @@ def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
 def create_user(db: Session, user: UserCreate):
-    db_user = User(
-        email=user.email,
-        first_name=user.first_name,
-        last_name=user.last_name,
-        picture_url=user.picture_url,
-    )
+    db_user = User(**user.dict())  # Convert pydantic model to dict for SQLAlchemy
     db.add(db_user)
     db.commit()
-    db.refresh(db_user)
+    db.refresh(db_user)  # Update user_id with the generated value
     return db_user
