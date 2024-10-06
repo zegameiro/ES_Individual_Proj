@@ -1,10 +1,12 @@
 import NavBarComp from "../components/NavBarComp"
 import { GoogleLogin } from "@react-oauth/google"
+import { jwtDecode } from "jwt-decode"
 
 const HomePage = () => {
 
     const responseMessage = (response) => {
         console.log("Response received from Google:", response)
+        console.log("Decoded JWT:", jwtDecode(response.credential))
     }
 
     const errorMessage = (error) => {
