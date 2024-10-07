@@ -11,7 +11,6 @@ user = postgres_info["user"]
 password = postgres_info["password"]
 database = postgres_info["database"]
 
-
 SQLALCHEMY_DATABASE_URL = f"postgresql://{user}:{password}@{host}:{port}/{database}"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)

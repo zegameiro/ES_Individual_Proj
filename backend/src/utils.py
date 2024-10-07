@@ -1,4 +1,5 @@
 import re
+import hashlib
 
 def get_postgres_info():
     return {
@@ -23,3 +24,10 @@ def check_name(name: str) -> bool:
         return False
     
     return True
+
+def generate_access_token(first_name: str, last_name: str, user_id) -> str:
+    """Generate a unique access token for a user based on their full name."""
+    
+    full_name = f"{first_name},{last_name},{user_id}"
+    access_token = hashlib.sha256(full_name.encode()).hexdigest()
+    return access_token
