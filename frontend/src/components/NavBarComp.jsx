@@ -10,11 +10,19 @@ import {
   Button
 } from "@nextui-org/react"
 import { useState } from "react"
+import { googleLogout } from "@react-oauth/google";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+
 import { LogoHorizontal } from "../assets";
+import { postLogout } from "../api/postActions";
+import axios from "../api"
 
 const NavBarComp = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [access_token, setAccessToken] = useState(localStorage.getItem('access_token'));
+  const navigate = useNavigate()
 
   const menuItems = [
     "Profile",
@@ -29,10 +37,21 @@ const NavBarComp = () => {
     "Log Out",
   ];
 
+  const logoutMutation = useMutation({
+    mutationKey: ['logout'],
+    mutationFn: () => postLogout(axios, access_token),
+    onSuccess: () => {
+      localStorage.removeItem('access_token')
+      setAccessToken(null)
+      googleLogout()
+      navigate("/")
+    }
+  })
+
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen} isBordered isBlurred>
       <NavbarContent>
-        <NavbarMenuToggle 
+        <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
         />
@@ -62,14 +81,20 @@ const NavBarComp = () => {
       </NavbarContent>
 
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
+        {access_token ? (
+          <NavbarItem>
+            <Button color="danger" variant="bordered" onClick={() => logoutMutation.mutate()}>
+              Logout
+            </Button>
+          </NavbarItem>
+        ) : (
+          <NavbarItem>
+            <Button as={Link} color="primary" href="/login" variant="flat">
+              Login
+            </Button>
+          </NavbarItem>
+        )}
+
       </NavbarContent>
 
       <NavbarMenu>
