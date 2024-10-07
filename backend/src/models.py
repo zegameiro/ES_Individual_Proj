@@ -11,6 +11,7 @@ class User(Base):
     first_name = Column(String(50))
     last_name = Column(String(50))
     picture_url = Column(String)
+    access_token = Column(String(256), default=None, unique=True)
     tasks = relationship("Task", back_populates="user", cascade="all, delete-orphan")
 
 class Task(Base):

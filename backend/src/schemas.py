@@ -43,6 +43,7 @@ class UserUpdate(UserBase):
 class UserSchema(UserBase):
     id: int
     tasks: List["TaskSchema"] = []
+    access_token: str
 
     class Config:
         orm_mode = True
