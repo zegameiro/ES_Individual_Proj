@@ -10,7 +10,7 @@ import { clientId } from './constants.jsx'
 const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')).render(
-  <GoogleOAuthProvider clientId={clientId}>
+  <GoogleOAuthProvider clientId={clientId} >
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <NextUIProvider>
