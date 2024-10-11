@@ -10,18 +10,20 @@ import {
   Button
 } from "@nextui-org/react"
 import { useState } from "react"
-import { googleLogout } from "@react-oauth/google";
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { googleLogout } from "@react-oauth/google"
+import { useMutation } from "@tanstack/react-query"
+import { useNavigate } from "react-router-dom"
+import { useCookies } from "react-cookie"
 
-import { LogoHorizontal } from "../assets";
-import { postLogout } from "../api/postActions";
+import { LogoHorizontal } from "../assets"
+import { postLogout } from "../api/postActions"
 import axios from "../api"
 
 const NavBarComp = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [access_token, setAccessToken] = useState(localStorage.getItem('access_token'));
+  const [cookies, _setCookie, removeCookie] = useCookies(["access_token"]);
+  const [access_token, setAccessToken] = useState(cookies['access_token']);
   const navigate = useNavigate()
 
   const menuItems = [
@@ -41,7 +43,7 @@ const NavBarComp = () => {
     mutationKey: ['logout'],
     mutationFn: () => postLogout(axios, access_token),
     onSuccess: () => {
-      localStorage.removeItem('access_token')
+      removeCookie("access_token")
       setAccessToken(null)
       googleLogout()
       navigate("/")

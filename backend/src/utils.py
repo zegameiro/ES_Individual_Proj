@@ -1,5 +1,11 @@
-import re
+from dotenv import load_dotenv
+
 import hashlib
+import os
+
+load_dotenv()
+
+CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 
 def get_postgres_info():
     return {
@@ -9,21 +15,6 @@ def get_postgres_info():
         "password": "taskflow_admin_password",
         "database": "taskflow_db"
     }
-
-def check_email(email: str) -> bool:
-    email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
-    return bool(re.match(email_regex, email))
-
-def check_name(name: str) -> bool:
-
-    if len(name) < 3 or len(name) > 50:
-        return False
-
-    # Check if any number exists in the name
-    if any(char.isdigit() for char in name):
-        return False
-    
-    return True
 
 def generate_access_token(first_name: str, last_name: str, user_id) -> str:
     """Generate a unique access token for a user based on their full name."""

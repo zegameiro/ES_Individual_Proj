@@ -2,8 +2,8 @@ import { useState } from "react"
 import { Divider, Link, Spinner } from "@nextui-org/react"
 import { useMutation } from "@tanstack/react-query"
 import { GoogleLogin } from "@react-oauth/google"
-import { useNavigate } from "react-router-dom"
-import { jwtDecode } from "jwt-decode"
+import { useNavigate } from "react-router-dom"  
+import { useCookies } from "react-cookie"
 
 import { MdError } from "react-icons/md";
 import { FaCircleCheck } from "react-icons/fa6";
@@ -16,37 +16,21 @@ const LoginPage = () => {
 
     const navigate = useNavigate()
     const [googleError, setGoogleError] = useState()
+    const [, setCookie] = useCookies()
 
     const loginMutation = useMutation({
         mutationKey: ['login'],
         mutationFn: (data) => postLogin(axios, data),
         onSuccess: (response) => {
-            console.log("Login successful:", response)
             if (response.data.access_token) {
-                localStorage.setItem('access_token', response.data.access_token)
-                setTimeout(() => {
-                    navigate("/")
-                }, 2000)
-            } else {
-                console.log("Failed to find the access token\n", response)
+                setCookie("access_token", response.data.access_token, { path: '/' })
+                setTimeout(() => navigate("/"), 1000)
             }
-            console.log("Heloooooo")
         }
     })
 
     const responseMessage = (response) => {
-        console.log("Response received from Google:", response)
-        console.log("Decoded JWT:", jwtDecode(response.credential))
-        const credentials = jwtDecode(response.credential)
-
-        const data = {
-            "email": credentials.email,
-            "first_name": credentials.given_name,
-            "last_name": credentials.family_name,
-            "picture_url": credentials.picture
-        }
-
-        loginMutation.mutate(JSON.stringify(data))
+        loginMutation.mutate(JSON.stringify({credential: response.credential}))
     }
 
     const errorMessage = (error) => {
