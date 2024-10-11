@@ -23,7 +23,7 @@ class TaskSchema(TaskBase):
     user_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # ----------------------- USER SCHEMAS -----------------------
@@ -34,8 +34,8 @@ class UserBase(BaseModel):
     last_name: str
     picture_url: Optional[str] = None
 
-class UserCreate(UserBase):
-    pass
+class UserCreate(BaseModel):
+    credential: str
 
 class UserUpdate(UserBase):
     pass
@@ -46,4 +46,4 @@ class UserSchema(UserBase):
     access_token: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
