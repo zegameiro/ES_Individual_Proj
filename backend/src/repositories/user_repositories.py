@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from .models import User
-from .utils import generate_access_token
+from ..models import User
+from ..utils import generate_access_token
 
 def get_user(user_id: int, db: Session):
     return db.query(User).filter(User.id == user_id).first()
