@@ -1,24 +1,22 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
+
 # ----------------------- TASK SCHEMAS -----------------------
 
 class TaskBase(BaseModel):
     title: str
     description: str
-    category: str
-    is_completed: bool = False
-    dealine: str
-    priority: str
+    category: Optional[str] = None
+    deadline: Optional[str] = None
+    priority: Optional[str] = None
 
 class TaskCreate(TaskBase):
     pass
 
-class TaskUpdate(TaskBase):
-    pass
-
 class TaskSchema(TaskBase):
     id: int
+    is_completed: bool = False
     creation_date: str
     user_id: int
 
@@ -36,9 +34,6 @@ class UserBase(BaseModel):
 
 class UserCreate(BaseModel):
     credential: str
-
-class UserUpdate(UserBase):
-    pass
 
 class UserSchema(UserBase):
     id: int
