@@ -29,7 +29,11 @@ def login(user: UserCreate, db: Session = Depends(get_db)):
         # If user exists, generate a new access token for them
         if existing_user:
 
-            access_token = generate_access_token(existing_user.first_name, existing_user.last_name, idinfo.get('jti'))
+            access_token = generate_access_token(
+                first_name=existing_user.first_name, 
+                last_name=existing_user.last_name,
+                user_id=idinfo.get('jti')
+            )
             update_user_access_token(existing_user=existing_user, access_token=access_token, db=db)
 
             return JSONResponse(
@@ -41,7 +45,7 @@ def login(user: UserCreate, db: Session = Depends(get_db)):
             )
 
         # If user does not exist, create a new one and generate a new access token
-        new_user = create_user(idinfo=idinfo)
+        new_user = create_user(idinfo=idinfo, db=db)
 
         return JSONResponse(
             status_code=201,

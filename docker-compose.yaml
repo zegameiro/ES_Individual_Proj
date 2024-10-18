@@ -12,7 +12,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres_db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
+      test: ["CMD", "pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -25,8 +25,7 @@ services:
         condition: service_healthy
     build: 
       context: ./backend
-      dockerfile: Dockerfile
-    container_name: "backend_taskflow"  
+      dockerfile: Dockerfile 
     environment:
       - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_PORT=${POSTGRES_PORT}
@@ -36,16 +35,19 @@ services:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/backend
 
   frontend:
     build: 
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: "frontend_taskflow"
     ports:
       - "3000:3000"
     depends_on:
       - backend
+    volumes:
+      - ./frontend:/frontend
 
 volumes:
   postgres_data: 
