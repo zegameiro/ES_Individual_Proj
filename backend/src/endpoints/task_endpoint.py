@@ -3,8 +3,8 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..repositories.task_repositories import create_task
-from ..repositories.user_repositories import get_user_by_access_token
+from ..repositories.task_repository import create_task
+from ..repositories.user_repository import get_user_by_access_token
 from ..schemas import TaskCreate
 
 router = APIRouter()
