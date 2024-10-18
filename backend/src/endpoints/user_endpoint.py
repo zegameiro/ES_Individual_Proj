@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from google.oauth2 import id_token
 from google.auth.transport.requests import Request
 
-from ..repositories.user_repositories import get_user_by_email, create_user, get_user_by_access_token, update_user_access_token
+from ..repositories.user_repository import get_user_by_email, create_user, get_user_by_access_token, update_user_access_token
 from ..schemas import UserCreate
 from ..utils import generate_access_token, CLIENT_ID
 from ..database import get_db
