@@ -5,15 +5,20 @@ import os
 
 load_dotenv()
 
+HOST = os.getenv('POSTGRES_HOST', 'localhost')
+PORT = os.getenv('POSTGRES_PORT', '5432')
+USER = os.getenv('POSTGRES_USER', 'taskflow_admin')
+PASSWORD = os.getenv('POSTGRES_PASSWORD', 'taskflow_admin_password')
+DATABASE = os.getenv('POSTGRES_DATABASE', 'taskflow_db')
 CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 
 def get_postgres_info():
     return {
-        "host": "localhost",
-        "port": "5432",
-        "user": "taskflow_admin_user",
-        "password": "taskflow_admin_password",
-        "database": "taskflow_db"
+        "host": HOST,
+        "port": PORT,
+        "user": USER,
+        "password": PASSWORD,
+        "database": DATABASE
     }
 
 def generate_access_token(first_name: str, last_name: str, user_id) -> str:
