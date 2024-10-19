@@ -23,7 +23,6 @@ class TaskSchema(TaskBase):
     class Config:
         from_attributes = True
 
-
 # ----------------------- USER SCHEMAS -----------------------
 
 class UserBase(BaseModel):
