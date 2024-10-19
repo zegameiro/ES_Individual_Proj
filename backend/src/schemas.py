@@ -11,6 +11,7 @@ class TaskBase(BaseModel):
 class TaskCreate(TaskBase):
     pass
 
+
 class TaskSchema(TaskBase):
     id: int
     category: Optional[str] = None
