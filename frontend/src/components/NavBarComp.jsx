@@ -7,48 +7,26 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   Link,
-  Button
+  Button,
 } from "@nextui-org/react"
 import { useState } from "react"
-import { googleLogout } from "@react-oauth/google"
-import { useMutation } from "@tanstack/react-query"
-import { useNavigate } from "react-router-dom"
-import { useCookies } from "react-cookie"
 
 import { LogoHorizontal } from "../assets"
-import { postLogout } from "../api/postActions"
-import axios from "../api"
+import { useUserStore } from "../stores/userStore"
+import ProfileComponent from "./ProfileComponent"
 
 const NavBarComp = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cookies, _setCookie, removeCookie] = useCookies(["access_token"]);
-  const [access_token, setAccessToken] = useState(cookies['access_token']);
-  const navigate = useNavigate()
+
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn) || false;
 
   const menuItems = [
     "Profile",
-    "Dashboard",
-    "Activity",
-    "Analytics",
-    "System",
-    "Deployments",
-    "My Settings",
-    "Team Settings",
-    "Help & Feedback",
+    "My Tasks",
+    "Add Task",
     "Log Out",
   ];
-
-  const logoutMutation = useMutation({
-    mutationKey: ['logout'],
-    mutationFn: () => postLogout(axios, access_token),
-    onSuccess: () => {
-      removeCookie("access_token")
-      setAccessToken(null)
-      googleLogout()
-      navigate("/")
-    }
-  })
 
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen} isBordered isBlurred>
@@ -59,39 +37,34 @@ const NavBarComp = () => {
         />
         <NavbarBrand>
           <Link href="/">
-            <img src={LogoHorizontal} alt="Logo Image" />
+            <img src={LogoHorizontal} alt="Logo Image" width={200} />
           </Link>
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Features
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#" aria-current="page">
-            Customers
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Integrations
-          </Link>
-        </NavbarItem>
-      </NavbarContent>
+      {isLoggedIn && (
+        <NavbarContent className="hidden sm:flex gap-4" justify="center">
+          <NavbarItem>
+            <Link color="foreground" href="#">
+              My Tasks
+            </Link>
+          </NavbarItem>
+          <NavbarItem isActive>
+            <Link href="#" aria-current="page">
+              Add Task
+            </Link>
+          </NavbarItem>
+        </NavbarContent>
+      )}
 
       <NavbarContent justify="end">
-        {access_token ? (
-          <NavbarItem>
-            <Button color="danger" variant="bordered" onClick={() => logoutMutation.mutate()}>
-              Logout
-            </Button>
-          </NavbarItem>
+        {isLoggedIn ? (
+          <>
+            <ProfileComponent />
+          </>
         ) : (
           <NavbarItem>
-            <Button as={Link} color="primary" href="/login" variant="flat">
+            <Button as={Link} color="primary" href="/login" variant="ghost" className="text-lg">
               Login
             </Button>
           </NavbarItem>
