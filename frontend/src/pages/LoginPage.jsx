@@ -11,21 +11,33 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { LogoVertical } from "../assets"
 import axios from "../api"
 import { postLogin } from "../api/postActions"
+import { useUserStore } from "../stores/userStore"
+
 
 const LoginPage = () => {
 
     const navigate = useNavigate()
     const [googleError, setGoogleError] = useState()
     const [, setCookie] = useCookies()
+    const loginStore = useUserStore((state) => state.login) || false;
 
     const loginMutation = useMutation({
         mutationKey: ['login'],
         mutationFn: (data) => postLogin(axios, data),
         onSuccess: (response) => {
             if (response.data.access_token) {
+                loginStore(
+                    response.data.first_name,
+                    response.data.last_name,
+                    response.data.picture_url,
+                    response.data.access_token
+                )
                 setCookie("access_token", response.data.access_token, { path: '/' })
                 setTimeout(() => navigate("/"), 1000)
             }
+        },
+        onError: (error) => {
+            console.error("Error response from API:", error)
         }
     })
 
@@ -39,36 +51,37 @@ const LoginPage = () => {
     }
 
     return (
-        <main className="flex flex-col bg-gradient-to-tr from-[#7d47a4] to-white">
+        <main className="flex flex-col bg-gradient-to-tr from-primary to-background">
             <div className="flex flex-col px-[10%] py-[5%] justify-center min-h-screen">
-                <div className="flex flex-row border-2 p-4 rounded-xl shadow-lg justify-evenly bg-white ">
+                <div className="flex flex-col lg:flex-row border-2 p-4 rounded-xl shadow-lg justify-evenly bg-background">
 
                     <div className="flex flex-row justify-center items-center space-x-10">
                         <Link href="/" className="cursor-pointer">
-                            <img src={LogoVertical} alt="TaskFlow Logo" width="170vw" />
+                            <img src={LogoVertical} alt="TaskFlow Logo" />
                         </Link>
-                        <p className="text-nowrap text-2xl font-semibold">Structure your <span className="text-[#7d47a4]">Tasks</span>,<br /> Master your <span className="text-[#7d47a4]">Workflow</span></p>
+                        <p className="text-nowrap text-2xl font-semibold">Structure your <span className="text-primary">Tasks</span>,<br /> Master your <span className="text-[#7d47a4]">Workflow</span></p>
                     </div>
 
-                    <Divider orientation="vertical" className="my-4 h-[10vw]" />
+                    <Divider orientation="vertical" className="hidden lg:flex my-4 h-[10vw]" />
+                    <Divider orientation="horizontal" className="flex lg:hidden my-4 w-full" />
 
                     <div className="flex flex-col justify-center items-center space-y-2">
                         <span className="text-center">
                             <h1 className="text-2xl font-bold">Login with</h1>
                         </span>
                         {googleError || (loginMutation.isError && loginMutation?.error) ? ( // Error message either from Google OAuth2 or from the API
-                            <span className="flex flex-row gap-1 items-center text-red-600 font-semibold">
+                            <span className="flex flex-row gap-1 items-center text-error font-semibold">
                                 <MdError className="text-lg" /> Error - 
                                 <p>{googleError || loginMutation.error?.response?.data?.detail?.message}</p>
                             </span>
 
                         ) : loginMutation.isSuccess ? ( // Success message 
-                            <span className="flex flex-row gap-1 items-center text-green-500 font-semibold">
+                            <span className="flex flex-row gap-1 items-center text-success font-semibold">
                                 <FaCircleCheck /> Logged in with success
                             </span>
 
                         ) : loginMutation.isPending ? ( // Loading message while waiting for API response
-                            <span className="flex flex-row gap-2 items-center text-[#7d47a4] font-semibold">
+                            <span className="flex flex-row gap-2 items-center text-primary font-semibold">
                                 <Spinner size="md" color="secondary" /> Loading
                             </span>
 
