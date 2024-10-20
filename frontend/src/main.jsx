@@ -17,7 +17,7 @@ createRoot(document.getElementById('root')).render(
       <CookiesProvider>
         <QueryClientProvider client={queryClient}>
           <NextUIProvider>
-            <main className='light text-foreground bg-background'>
+            <main className='light-theme text-foreground bg-background'>
               <App />
             </main>
           </NextUIProvider>
