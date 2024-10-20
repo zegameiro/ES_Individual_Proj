@@ -12,7 +12,7 @@ def get_user_by_email(email: str, db: Session):
 def get_user_by_access_token(access_token: str, db: Session):
     return db.query(User).filter(User.access_token == access_token).first()
 
-def create_user(idinfo: dict, db: Session):
+def create_user(idinfo: dict, db: Session) -> User:
 
     access_token = generate_access_token(idinfo.get('given_name'), idinfo.get('family_name'), idinfo.get('jti'))
     db_user = User(
