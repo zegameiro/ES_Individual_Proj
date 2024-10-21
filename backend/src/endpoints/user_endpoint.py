@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from google.oauth2 import id_token
 from google.auth.transport.requests import Request
 
-from ..crud_operations import get_user_by_email, create_user, get_user_by_access_token, update_user_access_token
+from ..repositories.user_repository import get_user_by_email, create_user, get_user_by_access_token, update_user_access_token
 from ..schemas import UserCreate
 from ..utils import generate_access_token, CLIENT_ID
 from ..database import get_db
@@ -40,7 +40,10 @@ def login(user: UserCreate, db: Session = Depends(get_db)):
                 status_code=200,
                 content={
                     "message": "User logged in successfully",
-                    "access_token": access_token
+                    "access_token": access_token,
+                    "first_name": existing_user.first_name,
+                    "last_name": existing_user.last_name,
+                    "picture_url": existing_user.picture_url
                 }
             )
 
@@ -51,7 +54,10 @@ def login(user: UserCreate, db: Session = Depends(get_db)):
             status_code=201,
             content={
                 "message": "User created with success",
-                "access_token": new_user.accessToken
+                "access_token": new_user.access_token,
+                "first_name": new_user.first_name,
+                "last_name": new_user.last_name,
+                "picture_url": new_user.picture_url,
             }
         )
 
