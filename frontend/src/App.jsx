@@ -12,6 +12,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={ <Layout><LandingPage /></Layout> } />
+          <Route path='/home' element={ <Layout><HomePage /></Layout> } />
           <Route path='/login' element={ <LoginPage /> } />
           <Route path='/add-task' element={ <Layout><AddTaskPage /></Layout> } />
         </Routes>
