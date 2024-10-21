@@ -11,6 +11,10 @@ export const useUserStore = create((set) => ({
         set({ first_name, last_name, picture_url, access_token, isLoggedIn: true });
     },
 
+    logout: () => {
+        set({ first_name: "", last_name: "", picture_url: "", access_token: "", isLoggedIn: false });
+    },
+
     setFirstName: (first_name) => {
         set({ first_name })
     },

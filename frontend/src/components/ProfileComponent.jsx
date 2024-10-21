@@ -21,6 +21,8 @@ const ProfileComponent = () => {
     const first_name = useUserStore((state) => state.first_name) || "Not";
     const last_name = useUserStore((state) => state.last_name) || "Known";
     const picture_url = useUserStore((state) => state.picture_url) || "";
+    const logoutStore = useUserStore((state) => state.logout) || false;
+
 
     console.log(picture_url)
 
@@ -32,6 +34,7 @@ const ProfileComponent = () => {
         onSuccess: () => {
           removeCookie("access_token")
           setAccessToken(null)
+          logoutStore()
           googleLogout()
           navigate("/")
         }

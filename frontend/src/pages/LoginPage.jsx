@@ -33,7 +33,7 @@ const LoginPage = () => {
                     response.data.access_token
                 )
                 setCookie("access_token", response.data.access_token, { path: '/' })
-                setTimeout(() => navigate("/"), 1000)
+                setTimeout(() => navigate("/home"), 1000)
             }
         },
         onError: (error) => {
