@@ -1,37 +1,28 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from 'zustand/middleware'
 
-export const useUserStore = create((set) => ({
-    first_name: "",
-    last_name: "",
-    picture_url: "",
-    access_token: "",
-    isLoggedIn: false,
+export const useUserStore = create(
+    persist((set, _get) => (
+        {
+            first_name: "",
+            last_name: "",
+            picture_url: "",
+            access_token: "",
+            isLoggedIn: false,
 
-    login: (first_name, last_name, picture_url, access_token) => {
-        set({ first_name, last_name, picture_url, access_token, isLoggedIn: true });
-    },
+            login: (first_name, last_name, picture_url, access_token , setCookie) => {
+                set({ first_name, last_name, picture_url, access_token, isLoggedIn: true });
+                setCookie("access_token", access_token)
+            },
 
-    logout: () => {
-        set({ first_name: "", last_name: "", picture_url: "", access_token: "", isLoggedIn: false });
-    },
-
-    setFirstName: (first_name) => {
-        set({ first_name })
-    },
-
-    setLastName: (last_name) => {
-        set({ last_name })
-    },
-
-    setPictureUrl: (picture_url) => {
-        set({ picture_url })
-    },
-
-    setAccessToken: (access_token) => {
-        set({ access_token })
-    },
-
-    setIsLoggedIn: (isLoggedIn) => {
-        set({ isLoggedIn })
-    }
-}))
+            logout: (removeCookie) => {
+                set({ first_name: "", last_name: "", picture_url: "", access_token: "", isLoggedIn: false });
+                removeCookie("access_token")
+            },
+        }
+    ),
+    {
+        name: "user-store",
+        storage: createJSONStorage(() => localStorage)
+    })
+)

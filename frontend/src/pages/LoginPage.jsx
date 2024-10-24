@@ -2,14 +2,13 @@ import { useState } from "react"
 import { Divider, Link, Spinner } from "@nextui-org/react"
 import { useMutation } from "@tanstack/react-query"
 import { GoogleLogin } from "@react-oauth/google"
-import { useNavigate } from "react-router-dom"  
+import { useNavigate } from "react-router-dom" 
 import { useCookies } from "react-cookie"
 
 import { MdError } from "react-icons/md";
 import { FaCircleCheck } from "react-icons/fa6";
 
 import { LogoVertical } from "../assets"
-import axios from "../api"
 import { postLogin } from "../api/postActions"
 import { useUserStore } from "../stores/userStore"
 
@@ -18,21 +17,21 @@ const LoginPage = () => {
 
     const navigate = useNavigate()
     const [googleError, setGoogleError] = useState()
-    const [, setCookie] = useCookies()
+    const [ _cookies, setCookie ] = useCookies(['access_token'])
     const loginStore = useUserStore((state) => state.login) || false;
 
     const loginMutation = useMutation({
         mutationKey: ['login'],
-        mutationFn: (data) => postLogin(axios, data),
+        mutationFn: (data) => postLogin(data),
         onSuccess: (response) => {
             if (response.data.access_token) {
                 loginStore(
                     response.data.first_name,
                     response.data.last_name,
                     response.data.picture_url,
-                    response.data.access_token
+                    response.data.access_token,
+                    setCookie
                 )
-                setCookie("access_token", response.data.access_token, { path: '/' })
                 setTimeout(() => navigate("/home"), 1000)
             }
         },
