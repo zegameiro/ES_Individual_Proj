@@ -6,6 +6,7 @@ from ..database import get_db
 from ..repositories.task_repository import create_task
 from ..repositories.user_repository import get_user_by_access_token
 from ..schemas import TaskCreate
+from ..utils import authenticated
 
 router = APIRouter()
 
@@ -14,6 +15,7 @@ router = APIRouter()
     description="Add a new task and associate it with a user. Its required to send the access token in the request",
     name="Add a new Task"
 )
+@authenticated()
 def add_new_task(request: Request, task: TaskCreate, db: Session = Depends(get_db)):
 
     # Get the access token from the cookie in the request
