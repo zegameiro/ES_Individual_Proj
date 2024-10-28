@@ -6,9 +6,16 @@ import {
 	ModalFooter,
 	Button,
 	Input,
-	Textarea
+	Textarea,
+	Spinner
 } from "@nextui-org/react"
 import { useForm } from "react-hook-form"
+import { useMutation } from "@tanstack/react-query"
+
+import { MdError } from "react-icons/md";
+import { FaCircleCheck } from "react-icons/fa6";
+
+import { postAddTask } from "../api/postActions"
 
 const AddTaskModal = ({ isOpen, onOpen, onOpenChange }) => {
 
@@ -16,7 +23,20 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange }) => {
 
 	const onSubmit = (data) => {
 		console.log(data)
+		addTaskMutation.mutate(data)
 	}
+
+	const addTaskMutation = useMutation({
+		mutationKey: ['addTask'],
+		mutationFn: (data) => postAddTask(data),
+		onSuccess: () => {
+			setTimeout(() => {
+				isOpen = false
+				reset()
+			})
+		},
+	})
+
 
 	return (
 		<Modal
@@ -31,7 +51,12 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange }) => {
 						<form onSubmit={handleSubmit(onSubmit)}>
 							<ModalBody className="space-y-3">
 								<Input
-									{...register("title", { required: "Missing title for the Task", maxLength: 100, minLength: 5 })}
+									{...register("title", {
+										required: "Missing title for the Task",
+										maxLength: { value: 100, message: "Max length is 100 characters" },
+										minLength: { value: 5, message: "Title is required to have at least 5 characters	" }
+									}
+									)}
 									isRequired
 									isClearable
 									isInvalid={errors.title}
@@ -44,7 +69,11 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange }) => {
 									onClear={() => console.log("input cleared")}
 								/>
 								<Textarea
-									{...register("description", { required: "Missing description for the Task", maxLength: 1000, minLength: 10 })}
+									{...register("description", {
+										required: "Missing description for the Task",
+										maxLength: { value: 1000, message: "Max length is 1000 characters" },
+										minLength: { value: 10, message: "Description must have at least 10 characters" }
+									})}
 									isRequired
 									isInvalid={errors.description}
 									variant="underlined"
@@ -56,12 +85,28 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange }) => {
 								/>
 							</ModalBody>
 							<ModalFooter>
-								<Button color="danger" variant="light" onPress={onClose} onClick={(e) => { e.preventDefault(); reset() }}>
-									Close
-								</Button>
-								<Button color="secondary" type="submit">
-									Action
-								</Button>
+								{addTaskMutation.isPending ? (
+									<span className="flex flex-row gap-2 justify-center w-full items-center text-primary font-semibold">
+										<Spinner size="md" color="secondary" /> Loading
+									</span>
+								) : addTaskMutation.isSuccess ? (
+									<span className="flex flex-row gap-1 w-full justify-center items-center text-success font-semibold">
+										<FaCircleCheck /> Task added with success
+									</span>
+								) : addTaskMutation.isError ? (
+									<span className="flex flex-row gap-1 w-full justify-center items-center text-error font-semibold">
+										<MdError className="text-lg" /> Error - { addTaskMutation.error?.detail }
+									</span>
+								) : (
+									<>
+										<Button color="danger" variant="light" onPress={onClose} onClick={(e) => { e.preventDefault(); reset() }}>
+											Close
+										</Button>
+										<Button color="secondary" type="submit">
+											Add Task
+										</Button>
+									</>
+								)}
 							</ModalFooter>
 						</form>
 					</>

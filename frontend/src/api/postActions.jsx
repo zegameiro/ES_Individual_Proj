@@ -12,3 +12,7 @@ export const postLogin = (data) => {
 export const postLogout = (access_token) => {
     return axios.post('user/logout?access_token=' + access_token)
 }
+
+export const postAddTask = (data) => {
+    return axios.post("/task/", data)
+}

@@ -42,14 +42,14 @@ const ProfileComponent = () => {
 				/>
 			</DropdownTrigger>
 			<DropdownMenu aria-label="Static Actions">
-				<DropdownItem textValue="Profile">
+				<DropdownItem textValue="Profile" onClick={() => navigate("/home")}>
 					<p className="flex flex-row items-center gap-2"><FaUser /> Profile</p>
 				</DropdownItem>
-				<DropdownItem textValue="My Tasks" showDivider>
+				<DropdownItem textValue="My Tasks" onClick={() => navigate("/home")} showDivider>
 					<p className="flex flex-row items-center gap-2"><PiGraph /> My Tasks</p>
 				</DropdownItem>
-				<DropdownItem key="delete" color="danger" textValue="Logout" onClick={() => logoutMutation.mutate()}>
-					<p className="flex flex-row items-center gap-2 text-danger hover:text-white"><FiLogOut /> Logout</p>
+				<DropdownItem key="delete" color="danger" textValue="Logout" onClick={() => {logoutMutation.mutate()}}>
+					<span className="flex flex-row items-center gap-2 text-danger hover:text-white"><FiLogOut /> Logout</span>
 				</DropdownItem>
 			</DropdownMenu>
 		</Dropdown>

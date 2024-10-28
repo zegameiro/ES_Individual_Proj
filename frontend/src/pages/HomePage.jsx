@@ -13,19 +13,19 @@ const HomePage = () => {
 		<div className="flex flex-col">
 			<Tabs color="primary" variant="underlined" aria-label="Profile-options" className="justify-center">
 				<Tab title={
-            <span className="flex flex-row items-center gap-2 text-lg">
-              <FaUser /> Profile
-            </span>
-          }
+					<span className="flex flex-row items-center gap-2 text-lg">
+						<FaUser /> Profile
+					</span>
+				}
 				>
-
+					
 				</Tab>
 
 				<Tab title={
-            <span className="flex flex-row items-center gap-2 text-lg">
-              <PiGraph /> My Tasks
-            </span>
-          }
+					<span className="flex flex-row items-center gap-2 text-lg">
+						<PiGraph /> My Tasks
+					</span>
+				}
 				>
 					<Button onPress={onOpen}>Add a new Task</Button>
 					<AddTaskModal isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} />

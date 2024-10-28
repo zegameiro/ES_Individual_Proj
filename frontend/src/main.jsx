@@ -7,9 +7,9 @@ import { CookiesProvider } from 'react-cookie'
 
 import App from './App.jsx'
 import './index.css'
-import { clientId } from './constants.jsx'
 
 const queryClient = new QueryClient()
+const clientId = "361591895069-pa7roahi6mo5jt67hujp335ivhjeh3fs.apps.googleusercontent.com"
 
 createRoot(document.getElementById('root')).render(
   <GoogleOAuthProvider clientId={clientId} >
