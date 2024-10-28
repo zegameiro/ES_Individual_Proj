@@ -1,5 +1,7 @@
+import axios from "./index"
+
 // Login 
-export const postLogin = (axios, data) => {
+export const postLogin = (data) => {
     return axios.post('user/login', data, {
         headers: {
             'Content-Type': 'application/json',
@@ -7,6 +9,10 @@ export const postLogin = (axios, data) => {
     })
 }
 
-export const postLogout = (axios, access_token) => {
+export const postLogout = (access_token) => {
     return axios.post('user/logout?access_token=' + access_token)
+}
+
+export const postAddTask = (data) => {
+    return axios.post("/task/", data)
 }

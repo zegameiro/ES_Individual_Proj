@@ -1,4 +1,6 @@
 from dotenv import load_dotenv
+from fastapi import HTTPException
+from functools import wraps
 
 import hashlib
 import os
@@ -27,3 +29,28 @@ def generate_access_token(first_name: str, last_name: str, user_id) -> str:
     full_name = f"{first_name},{last_name},{user_id}"
     access_token = hashlib.sha256(full_name.encode()).hexdigest()
     return access_token
+
+def authenticated():
+    """Decorator to check if a user is authenticated"""
+
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+
+            request = kwargs.get("request", None)
+
+            access_token = request.cookies.get("access_token")
+
+            if not access_token:
+                raise HTTPException(
+                    status_code=401,
+                    detail={
+                        "message": "Unauthorized, you must be logged in to access this resource"
+                    }
+                )
+            
+            return func(*args, **kwargs)
+    
+        return wrapper
+
+    return decorator

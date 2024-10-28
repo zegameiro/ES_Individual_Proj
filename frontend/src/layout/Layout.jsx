@@ -1,12 +1,12 @@
-import NavBarComp from "../components/NavBarComp"
+import HorizontalNavBar from "../components/HorizontalNavbar"
 
 const Layout = ({ children }) => {
   return (
     <main className="flex flex-col">
-        <NavBarComp />
-        <section className="px-[10vw] py-[4vh] text-text">
-            {children}
-        </section>
+      <HorizontalNavBar />
+      <section className="px-[10vw] py-[4vh] text-text">
+        {children}
+      </section>
     </main>
   )
 }

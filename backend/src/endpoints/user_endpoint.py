@@ -1,12 +1,12 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from google.oauth2 import id_token
-from google.auth.transport.requests import Request
+from google.auth.transport.requests import Request as GoogleRequest
 
 from ..repositories.user_repository import get_user_by_email, create_user, get_user_by_access_token, update_user_access_token
 from ..schemas import UserCreate
-from ..utils import generate_access_token, CLIENT_ID
+from ..utils import generate_access_token, CLIENT_ID, authenticated
 from ..database import get_db
 
 router = APIRouter()
@@ -19,7 +19,7 @@ router = APIRouter()
 def login(user: UserCreate, db: Session = Depends(get_db)):
 
     try:    
-        idinfo = id_token.verify_oauth2_token(user.credential, Request(), CLIENT_ID)
+        idinfo = id_token.verify_oauth2_token(user.credential, GoogleRequest(), CLIENT_ID)
 
         print(f"ID Token payload: {idinfo}")
 
@@ -69,7 +69,10 @@ def login(user: UserCreate, db: Session = Depends(get_db)):
     description="Operation to log out a user by deleting their access token",
     name="Logout",
 )
-def logout(access_token: str, db: Session = Depends(get_db)):
+@authenticated()
+def logout(request: Request, db: Session = Depends(get_db)):
+
+    access_token = request.cookies.get("access_token")
 
     possible_user = get_user_by_access_token(access_token=access_token, db=db)
 

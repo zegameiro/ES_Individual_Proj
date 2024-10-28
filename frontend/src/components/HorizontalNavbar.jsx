@@ -12,21 +12,20 @@ import {
 import { useState } from "react"
 
 import { LogoHorizontal } from "../assets"
-import { useUserStore } from "../stores/userStore"
 import ProfileComponent from "./ProfileComponent"
+import { useUserStore } from "../stores/userStore"
 
-const NavBarComp = () => {
+const HorizontalNavBar = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const isLoggedIn = useUserStore((state) => state.isLoggedIn) || false;
 
   const menuItems = [
     "Profile",
     "My Tasks",
-    "Add Task",
     "Log Out",
   ];
+
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn) || false;
 
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen} isBordered isBlurred>
@@ -42,34 +41,17 @@ const NavBarComp = () => {
         </NavbarBrand>
       </NavbarContent>
 
-      {isLoggedIn && (
-        <NavbarContent className="hidden sm:flex gap-4" justify="center">
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              My Tasks
-            </Link>
-          </NavbarItem>
-          <NavbarItem isActive>
-            <Link href="#" aria-current="page">
-              Add Task
-            </Link>
-          </NavbarItem>
-        </NavbarContent>
-      )}
 
       <NavbarContent justify="end">
-        {isLoggedIn ? (
-          <>
+        <NavbarItem>
+          {isLoggedIn ? (
             <ProfileComponent />
-          </>
-        ) : (
-          <NavbarItem>
+          ) : (
             <Button as={Link} color="primary" href="/login" variant="ghost" className="text-lg">
               Login
             </Button>
-          </NavbarItem>
-        )}
-
+          )}
+        </NavbarItem>
       </NavbarContent>
 
       <NavbarMenu>
@@ -92,4 +74,4 @@ const NavBarComp = () => {
   )
 }
 
-export default NavBarComp
+export default HorizontalNavBar
