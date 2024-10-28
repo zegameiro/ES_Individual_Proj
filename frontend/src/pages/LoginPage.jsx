@@ -12,6 +12,8 @@ import { LogoVertical } from "../assets"
 import { postLogin } from "../api/postActions"
 import { useUserStore } from "../stores/userStore"
 
+import { useUserStore } from "../stores/userStore"
+
 
 const LoginPage = () => {
 
