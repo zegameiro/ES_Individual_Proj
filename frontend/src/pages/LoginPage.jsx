@@ -39,6 +39,7 @@ const LoginPage = () => {
 		}
 	})
 
+
 	const responseMessage = (response) => {
 		loginMutation.mutate(JSON.stringify({ credential: response.credential }))
 	}
@@ -47,6 +48,7 @@ const LoginPage = () => {
 		console.error("Error response from Google:", error)
 		setGoogleError(error.message)
 	}
+
 
 	return (
 		<main className="flex flex-col bg-gradient-to-tr from-primary to-background">
@@ -78,10 +80,10 @@ const LoginPage = () => {
 								<FaCircleCheck /> Logged in with success
 							</span>
 
-						) : loginMutation.isPending ? ( // Loading message while waiting for API response
-							<span className="flex flex-row gap-2 items-center text-primary font-semibold">
-								<Spinner size="md" color="secondary" /> Loading
-							</span>
+                        ) : loginMutation.isPending ? ( // Loading message while waiting for API response
+                            <span className="flex flex-row gap-2 items-center text-primary font-semibold">
+                                <Spinner size="md" color="secondary" /> Loading
+                            </span>
 
 						) : ( // Google Login element (default case)
 							<GoogleLogin
