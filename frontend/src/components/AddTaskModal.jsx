@@ -37,6 +37,8 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange }) => {
 		},
 	})
 
+	console.log(isOpen)
+
 
 	return (
 		<Modal
@@ -95,7 +97,7 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange }) => {
 									</span>
 								) : addTaskMutation.isError ? (
 									<span className="flex flex-row gap-1 w-full justify-center items-center text-error font-semibold">
-										<MdError className="text-lg" /> Error - { addTaskMutation.error?.detail }
+										<MdError className="text-lg" /> Error - {addTaskMutation.error?.detail}
 									</span>
 								) : (
 									<>
