@@ -4,9 +4,8 @@ from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..repositories.task_repository import create_task
-from ..repositories.user_repository import get_user_by_access_token
 from ..schemas import TaskCreate, TaskSchema
-from ..utils import authenticated
+from ..utils import authenticated, validate_credential
 
 router = APIRouter()
 
@@ -19,16 +18,16 @@ router = APIRouter()
 def add_new_task(request: Request, task: TaskCreate, db: Session = Depends(get_db)):
 
     # Get the access token from the cookie in the request
-    access_token = request.cookies.get('access_token')
+    credential = request.cookies.get('credential')
 
-    # Get the user associated with the access token
-    user = get_user_by_access_token(access_token=access_token, db=db)
+    # Validate the access token
+    idinfo = validate_credential(credential)
 
-    if not user:
-        raise HTTPException(status_code=401, detail="Unauthorized, you must be logged in to add a new task")
-    
+
+    print(idinfo.get("email"))  
+
     # Create a new task associated with the user
-    create_task(task=task, user_id=user.id, db=db)
+    create_task(task=task, user_email=idinfo.get("email"), db=db)
 
     return JSONResponse(
         status_code=201,

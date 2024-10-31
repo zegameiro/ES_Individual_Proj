@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .models import Base
 from .database import engine
-from .endpoints import user_endpoint, task_endpoint
+from .endpoints import task_endpoint
 
 Base.metadata.create_all(bind=engine)
 
@@ -33,7 +33,6 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-app.include_router(user_endpoint.router, tags=["Users"], prefix="/user")
 app.include_router(task_endpoint.router, tags=["Tasks"], prefix="/task")
 
 @app.get("/")

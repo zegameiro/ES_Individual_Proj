@@ -1,18 +1,6 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, Boolean
 from .database import Base
 import time
-
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True)
-    email = Column(String(150), unique=True, index=True)
-    first_name = Column(String(50))
-    last_name = Column(String(50))
-    picture_url = Column(String)
-    access_token = Column(String(256), default=None, unique=True)
-    tasks = relationship("Task", back_populates="user", cascade="all, delete-orphan")
 
 class Task(Base):
     __tablename__ = "tasks"
@@ -25,9 +13,7 @@ class Task(Base):
     creation_date = Column(String(350))
     deadline = Column(String(350), default=None)
     priority = Column(String(10), default=None)
-    user_id = Column(Integer, ForeignKey("users.id"))
-
-    user = relationship("User", back_populates="tasks")
+    user_email = Column(String(100))
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

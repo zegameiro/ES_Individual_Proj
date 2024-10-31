@@ -11,26 +11,13 @@ const HomePage = () => {
 
 	return (
 		<div className="flex flex-col">
-			<Tabs color="primary" variant="underlined" aria-label="Profile-options" className="justify-center">
-				<Tab title={
-					<span className="flex flex-row items-center gap-2 text-lg">
-						<FaUser /> Profile
-					</span>
-				}
-				>
-					
-				</Tab>
-
-				<Tab title={
-					<span className="flex flex-row items-center gap-2 text-lg">
-						<PiGraph /> My Tasks
-					</span>
-				}
-				>
+			<h1 className="flex flex-row gap-2 items-center text-2xl font-bold"><PiGraph /> My Tasks</h1>
+			<div className="flex flex-col py-5">
+				<span>
 					<Button onPress={onOpen}>Add a new Task</Button>
-					<AddTaskModal isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} />
-				</Tab>
-			</Tabs>
+				</span>
+				<AddTaskModal isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} />
+			</div>
 		</div>
 	)
 }

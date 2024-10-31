@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
-
 # ----------------------- TASK SCHEMAS -----------------------
 
 class TaskBase(BaseModel):
@@ -10,7 +9,6 @@ class TaskBase(BaseModel):
 
 class TaskCreate(TaskBase):
     pass
-
 
 class TaskSchema(TaskBase):
     id: int
@@ -24,21 +22,3 @@ class TaskSchema(TaskBase):
     class Config:
         from_attributes = True
 
-# ----------------------- USER SCHEMAS -----------------------
-
-class UserBase(BaseModel):
-    email: str
-    first_name: str
-    last_name: str
-    picture_url: Optional[str] = None
-
-class UserCreate(BaseModel):
-    credential: str
-
-class UserSchema(UserBase):
-    id: int
-    tasks: List["TaskSchema"] = []
-    access_token: str
-
-    class Config:
-        from_attributes = True
