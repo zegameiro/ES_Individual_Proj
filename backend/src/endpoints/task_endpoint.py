@@ -39,7 +39,7 @@ def add_new_task(request: Request, task: TaskCreate, db_session: Session = Depen
     name="Get tasks from user"
 )
 @authenticated()
-def get_tasks(request: Request, db_session: Session = Depends(get_db)) -> list[TaskSchema]:
+def get_tasks(request: Request, db_session: Session = Depends(get_db)):
 
     # Get the access token from the cookie in the request
     credential = request.cookies.get('credential')
@@ -50,10 +50,4 @@ def get_tasks(request: Request, db_session: Session = Depends(get_db)) -> list[T
     # Get tasks associated with the user
     tasks = get_tasks_from_user(user_email=idinfo.get("email"), db=db_session)
 
-    return JSONResponse(
-        status_code=200,
-        content={
-            "tasks": [TaskSchema.model_validate(task) for task in tasks],
-            "message": "Tasks fetched successfully",
-        }
-    )
+    return tasks
