@@ -28,7 +28,7 @@ const ProfileComponent = () => {
 		<Dropdown backdrop="blur">
 			<DropdownTrigger>
 				<div className="flex flex-row items-center gap-2 cursor-pointer">
-					<img src={picture_url} alt="profile" className="w-10 h-10 rounded-full" fetch-priority="low" loading="lazy" decoding="async" referrerPolicy="no-referrer"/>
+					<img src={picture_url} alt="profile" className="w-10 h-10 rounded-full" fetch-priority="low" loading="lazy" decoding="async" referrerPolicy="no-referrer" />
 					<span className="text-lg">{user_name}</span>
 				</div>
 			</DropdownTrigger>

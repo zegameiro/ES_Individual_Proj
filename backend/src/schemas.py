@@ -17,7 +17,7 @@ class TaskSchema(TaskBase):
     priority: Optional[str] = None
     is_completed: bool = False
     creation_date: str
-    user_id: int
+    user_email: str
 
     class Config:
         from_attributes = True
