@@ -1,8 +1,9 @@
 from dotenv import load_dotenv
 from fastapi import HTTPException
 from functools import wraps
+from google.oauth2 import id_token
+from google.auth.transport.requests import Request as GoogleRequest
 
-import hashlib
 import os
 
 load_dotenv()
@@ -23,12 +24,18 @@ def get_postgres_info():
         "database": DATABASE
     }
 
-def generate_access_token(first_name: str, last_name: str, user_id) -> str:
-    """Generate a unique access token for a user based on their full name."""
-    
-    full_name = f"{first_name},{last_name},{user_id}"
-    access_token = hashlib.sha256(full_name.encode()).hexdigest()
-    return access_token
+def validate_credential(credential):
+    try:
+        idinfo = id_token.verify_oauth2_token(credential, GoogleRequest(), CLIENT_ID)
+        return idinfo
+    except ValueError:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "message": "Invalid credential"
+            }
+        )
+
 
 def authenticated():
     """Decorator to check if a user is authenticated"""
@@ -39,7 +46,7 @@ def authenticated():
 
             request = kwargs.get("request", None)
 
-            access_token = request.cookies.get("access_token")
+            access_token = request.cookies.get("credential")
 
             if not access_token:
                 raise HTTPException(
