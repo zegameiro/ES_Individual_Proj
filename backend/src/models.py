@@ -9,7 +9,7 @@ class Task(Base):
     title = Column(String, index=True)
     description = Column(String(150))
     category = Column(String(100), default=None)
-    isCompleted = Column(Boolean, default = False)
+    is_completed = Column(Boolean, default = False)
     creation_date = Column(String(350))
     deadline = Column(String(350), default=None)
     priority = Column(String(10), default=None)
