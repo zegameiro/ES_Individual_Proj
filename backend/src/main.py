@@ -13,6 +13,8 @@ description = """
 The TaskFlow API is a simple and lightweight task management system.
 It allows users to:
   - Create a new task
+  - Get all the tasks associated to a user
+  - Update a specific task that a user created
 </strong>
 """
 
