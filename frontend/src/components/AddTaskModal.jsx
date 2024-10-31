@@ -10,16 +10,18 @@ import {
 	Spinner
 } from "@nextui-org/react"
 import { useForm } from "react-hook-form"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import { MdError } from "react-icons/md";
 import { FaCircleCheck } from "react-icons/fa6";
 
-import { postAddTask } from "../api/postActions"
+import { postAddTask } from "../api/taskActions"
 
-const AddTaskModal = ({ isOpen, onOpen, onOpenChange }) => {
+const AddTaskModal = ({ isOpen, onOpen, onOpenChange, onClose }) => {
 
 	const { register, handleSubmit, reset, formState: { errors } } = useForm()
+
+	const queryClient = useQueryClient()
 
 	const onSubmit = (data) => {
 		console.log(data)
@@ -31,14 +33,13 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange }) => {
 		mutationFn: (data) => postAddTask(data),
 		onSuccess: () => {
 			setTimeout(() => {
-				isOpen = false
 				reset()
-			})
+				addTaskMutation.reset()
+				onClose()
+				queryClient.invalidateQueries('getTasks')
+			}, 1000)
 		},
 	})
-
-	console.log(isOpen)
-
 
 	return (
 		<Modal
@@ -56,7 +57,7 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange }) => {
 									{...register("title", {
 										required: "Missing title for the Task",
 										maxLength: { value: 100, message: "Max length is 100 characters" },
-										minLength: { value: 5, message: "Title is required to have at least 5 characters	" }
+										minLength: { value: 5, message: "Title is required to have at least 5 characters" }
 									}
 									)}
 									isRequired
@@ -101,7 +102,7 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange }) => {
 									</span>
 								) : (
 									<>
-										<Button color="danger" variant="light" onPress={onClose} onClick={(e) => { e.preventDefault(); reset() }}>
+										<Button color="danger" variant="light" onPress={onClose} onClick={(e) => { e.preventDefault(); reset(); addTaskMutation.reset() }}>
 											Close
 										</Button>
 										<Button color="secondary" type="submit">
