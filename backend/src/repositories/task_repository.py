@@ -3,12 +3,12 @@ from sqlalchemy.orm import Session
 from ..models import Task
 from ..schemas import TaskCreate
 
-def create_task(task: TaskCreate, user_id: int, db:Session) -> Task:
+def create_task(task: TaskCreate, user_email: str, db:Session) -> Task:
     
     new_task = Task(
         title=task.title,
         description=task.description,
-        user_id = user_id,
+        user_email=user_email
     )
 
     db.add(new_task)
@@ -17,5 +17,5 @@ def create_task(task: TaskCreate, user_id: int, db:Session) -> Task:
 
     return new_task
 
-def get_tasks_from_user(user_id: int, db: Session) -> list[Task]:
-    return db.query(Task).filter(Task.user_id == user_id).all()
+def get_tasks_from_user(user_email: str, db: Session) -> list[Task]:
+    return db.query(Task).filter(Task.user_email == user_email).all()
