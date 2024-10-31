@@ -1,54 +1,40 @@
 import { useState } from "react"
 import { Divider, Link, Spinner } from "@nextui-org/react"
-import { useMutation } from "@tanstack/react-query"
 import { GoogleLogin } from "@react-oauth/google"
 import { useNavigate } from "react-router-dom"
 import { useCookies } from "react-cookie"
+import { jwtDecode } from "jwt-decode"
 
 import { MdError } from "react-icons/md";
 import { FaCircleCheck } from "react-icons/fa6";
 
 import { LogoVertical } from "../assets"
-import { postLogin } from "../api/postActions"
 import { useUserStore } from "../stores/userStore"
 
 const LoginPage = () => {
 
 	const navigate = useNavigate()
-	const [googleError, setGoogleError] = useState()
-	const [_cookies, setCookie] = useCookies(['access_token'])
+	const [loginState, setLoginState] = useState() // 0 - login successfull; 1 - login failure
+	const [_cookies, setCookie] = useCookies(['credential'])
 	const loginStore = useUserStore((state) => state.login) || false;
+	const isLoggedIn = useUserStore((state) => state.isLoggedIn) || false;
 
-	const loginMutation = useMutation({
-		mutationKey: ['login'],
-		mutationFn: (data) => postLogin(data),
-		onSuccess: (response) => {
-			if (response.data.access_token) {
-				loginStore(
-					response.data.first_name,
-					response.data.last_name,
-					response.data.picture_url,
-					response.data.access_token,
-					setCookie
-				)
-				setTimeout(() => navigate("/home"), 1000)
-			}
-		},
-		onError: (error) => {
-			console.error("Error response from API:", error)
-		}
-	})
+	const successLogin = (response) => {
+		const credentials = jwtDecode(response.credential)
 
+		setCookie("credential", response.credential)
+		setLoginState(0)
+		loginStore(credentials.name, credentials.picture)
 
-	const responseMessage = (response) => {
-		loginMutation.mutate(JSON.stringify({ credential: response.credential }))
+		setTimeout(() => {
+			navigate("/home")
+		})
 	}
 
 	const errorMessage = (error) => {
-		console.error("Error response from Google:", error)
-		setGoogleError(error.message)
+		console.log(error)
+		setLoginState(1)
 	}
-
 
 	return (
 		<main className="flex flex-col bg-gradient-to-tr from-primary to-background">
@@ -69,27 +55,24 @@ const LoginPage = () => {
 						<span className="text-center">
 							<h1 className="text-2xl font-bold">Login with</h1>
 						</span>
-						{googleError || (loginMutation.isError && loginMutation?.error) ? ( // Error message either from Google OAuth2 or from the API
+						{loginState == 1 ? ( // Error message either from Google OAuth2 or from the API
 							<span className="flex flex-row gap-1 items-center text-error font-semibold">
-								<MdError className="text-lg" /> Error -
-								<p>{googleError || loginMutation.error?.response?.data?.detail?.message}</p>
+								<MdError className="text-lg" />
+								<p>Error login in</p>
 							</span>
 
-						) : loginMutation.isSuccess ? ( // Success message 
+						) : loginState == 2 ? ( // Success message 
 							<span className="flex flex-row gap-1 items-center text-success font-semibold">
 								<FaCircleCheck /> Logged in with success
 							</span>
 
-                        ) : loginMutation.isPending ? ( // Loading message while waiting for API response
-                            <span className="flex flex-row gap-2 items-center text-primary font-semibold">
-                                <Spinner size="md" color="secondary" /> Loading
-                            </span>
-
 						) : ( // Google Login element (default case)
-							<GoogleLogin
-								onSuccess={responseMessage}
-								onError={errorMessage}
-							/>
+							!isLoggedIn && (
+								<GoogleLogin
+									onSuccess={successLogin}
+									onError={errorMessage}
+								/>
+							)
 						)}
 					</div>
 				</div>
