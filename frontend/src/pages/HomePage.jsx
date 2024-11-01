@@ -26,18 +26,21 @@ const HomePage = () => {
 			<div className="flex flex-col py-5">
 				<AddTaskModal isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} onClose={onClose} />
 				<div className="flex flex-col space-y-4">
-					{tasks && tasks?.data?.length > 0 ? (
-						<div className="grid grid-cols-3 gap-4">
+					
+					{tasks && tasks?.data?.length > 0 ? ( // Show the list of tasks organized by cards
+						<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
 							{tasks.data.map((task, index) => (
 								<TaskCard key={index} task={task} />
 							))}
 						</div>
-					): loadingTasks ? (
-					<span className="flex flex-row gap-2 justify-center w-full items-center text-primary font-semibold">
-						<Spinner size="md" color="secondary" /> Loading
-					</span>
-					) : (
-					<span>No Tasks where found</span>
+
+					): loadingTasks ? ( // The query is still being done
+						<span className="flex flex-row gap-2 justify-center w-full items-center text-primary font-semibold">
+							<Spinner size="md" color="secondary" /> Loading
+						</span>
+
+					) : ( // Default case no tasks were found
+						<span>No Tasks where found</span>
 					)}
 				</div>
 			</div>

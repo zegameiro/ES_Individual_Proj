@@ -39,6 +39,14 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange, onClose }) => {
 				queryClient.invalidateQueries('getTasks')
 			}, 1000)
 		},
+		onError: () => {
+            console.error("Failed to add task")
+			setTimeout(() => {
+				onClose()
+				reset()
+				addTaskMutation.reset()
+			}, 1000)
+        }
 	})
 
 	return (
