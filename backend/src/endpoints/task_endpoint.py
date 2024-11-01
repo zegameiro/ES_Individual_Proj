@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..repositories.task_repository import create_task, get_tasks_from_user, update_task
+from ..repositories.task_repository import create_task, get_tasks_from_user, update_task, delete_task
 from ..schemas import TaskCreate, TaskSchema
 from ..utils import authenticated, validate_credential
 
@@ -60,8 +60,6 @@ def get_tasks(request: Request, db_session: Session = Depends(get_db)):
 @authenticated()
 def update_created_task(request: Request, task: TaskSchema, db_session: Session = Depends(get_db)):
 
-    print(task)
-
     # Get the access token from the cookie in the request
     credential = request.cookies.get('credential')
 
@@ -77,3 +75,33 @@ def update_created_task(request: Request, task: TaskSchema, db_session: Session 
             "message": "Task updated successfully",
         }
     )
+
+@router.delete(
+    "",
+    description="Delete a task that a user previously created, its required to send the jwtToken in the cookie",
+    name="Delete a Task"
+)
+@authenticated()
+def delete_created_task(request: Request, task_id: int, db_session: Session = Depends(get_db)):
+
+    # Get the access token from the cookie in the request
+    credential = request.cookies.get('credential')
+
+    # Validate the access token
+    idinfo = validate_credential(credential)
+
+    # Delete the task
+    if delete_task(task_id=task_id, db_session=db_session):
+        return JSONResponse(
+            status_code=200,
+            content={
+                "message": "Task deleted successfully",
+            }
+        )
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "message": "Task not found"
+            }
+        )
