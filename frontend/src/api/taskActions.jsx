@@ -11,3 +11,7 @@ export const getTasks = () => {
 export const putUpdateTask = (data) => {
     return axios.put("/task", data)   
 }
+
+export const deleteTask = (task_id) => {
+    return axios.delete(`/task?task_id=${task_id}`)
+}
