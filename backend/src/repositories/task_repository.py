@@ -1,9 +1,10 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 
 from ..models import Task
-from ..schemas import TaskCreate
+from ..schemas import TaskCreate, TaskSchema
 
-def create_task(task: TaskCreate, user_email: str, db:Session) -> Task:
+def create_task(task: TaskCreate, user_email: str, db_session: Session) -> Task:
     
     new_task = Task(
         title=task.title,
@@ -11,11 +12,28 @@ def create_task(task: TaskCreate, user_email: str, db:Session) -> Task:
         user_email=user_email
     )
 
-    db.add(new_task)
-    db.commit()
-    db.refresh(new_task)
+    db_session.add(new_task)
+    db_session.commit()
+    db_session.refresh(new_task)
 
     return new_task
 
-def get_tasks_from_user(user_email: str, db: Session) -> list[Task]:
-    return db.query(Task).filter(Task.user_email == user_email).all()
+def update_task(task: TaskSchema, task_id: int, db_session: Session) -> Task:
+
+    # Retrieve the task that needs to be updated
+    task_to_update = db_session.query(Task).filter(Task.id == task_id).first()
+
+    if task_to_update is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    
+    # Update the task's attributes
+    task_to_update.title = task.title
+    task_to_update.description = task.description
+    task_to_update.is_completed = task.is_completed
+
+    db_session.commit()
+    db_session.refresh(task_to_update)
+    
+
+def get_tasks_from_user(user_email: str, db_session: Session) -> list[Task]:
+    return db_session.query(Task).filter(Task.user_email == user_email).all()
