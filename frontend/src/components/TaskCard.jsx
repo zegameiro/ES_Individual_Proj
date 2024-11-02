@@ -30,7 +30,7 @@ const TaskCard = ({ index, task, onOpen, setCurrentTask, setIsEdit }) => {
     })
 
     return (
-        <Card className="max-w-[500px]" key={index}>
+        <Card className={`max-w-[500px] ${task.priority == "high" ? "ring-4 ring-danger" : task.priority == "medium" ? "ring-4 ring-warning" : "ring-4 ring-blue-500"}`} key={index}>
             <CardHeader className="flex flex-row justify-between items-center">
                 <p className="text-lg font-semibold">{task.title}</p>
                 {task.is_completed ?
