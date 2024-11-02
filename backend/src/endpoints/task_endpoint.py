@@ -127,6 +127,6 @@ def get_all_categories(request: Request, db_session: Session = Depends(get_db)) 
     idinfo = validate_credential(credential)
 
     # Get all categories
-    categories = get_categories(db_session=db_session)
+    categories = get_categories(user_email=idinfo.get("email"), db_session=db_session)
 
     return categories

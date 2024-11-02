@@ -15,3 +15,7 @@ export const putUpdateTask = (data) => {
 export const deleteTask = (task_id) => {
     return axios.delete(`/task?task_id=${task_id}`)
 }
+
+export const getCategories = () => {
+    return axios.get("/task/category")
+}
