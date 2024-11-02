@@ -55,6 +55,3 @@ def delete_task(task_id: int, db_session: Session) -> bool:
     db_session.commit()
 
     return True
-
-def get_categories(user_email: str, db_session: Session) -> list[str]:
-    return db_session.query(Task.category).filter(Task.user_email == user_email).distinct().all()

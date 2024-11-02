@@ -7,7 +7,6 @@ class TaskBase(BaseModel):
     title: str
     description: str
     priority: Optional[str] = None
-    category: Optional[str] = None
     deadline: Optional[str] = None
 
 class TaskCreate(TaskBase):
