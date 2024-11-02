@@ -16,7 +16,6 @@ It allows users to:
   - Get all the tasks associated to a user
   - Update a specific task that a user created
   - Delete a task that a user previously created
-  - Get all the categories that a user created
 </strong>
 """
 

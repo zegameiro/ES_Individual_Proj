@@ -9,8 +9,7 @@ from ..repositories.task_repository import (
     create_task,
     get_tasks_from_user,
     update_task, 
-    delete_task,
-    get_categories
+    delete_task
 )
 
 router = APIRouter()
