@@ -11,7 +11,6 @@ def create_task(task: TaskCreate, user_email: str, db_session: Session) -> Task:
         description=task.description,
         user_email=user_email,
         priority=task.priority,
-        category=task.category,
         deadline=task.deadline
     )
 
@@ -34,7 +33,6 @@ def update_task(task: TaskSchema, task_id: int, db_session: Session) -> Task:
     task_to_update.description = task.description
     task_to_update.is_completed = task.is_completed
     task_to_update.priority = task.priority
-    task_to_update.category = task.category
     task_to_update.deadline = task.deadline
 
     db_session.commit()
