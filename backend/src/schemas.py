@@ -6,15 +6,14 @@ from typing import List, Optional
 class TaskBase(BaseModel):
     title: str
     description: str
+    priority: Optional[str] = None
+    deadline: Optional[str] = None
 
 class TaskCreate(TaskBase):
     pass
 
 class TaskSchema(TaskBase):
     id: int
-    category: Optional[str] = None
-    deadline: Optional[str] = None
-    priority: Optional[str] = None
     is_completed: bool = False
     creation_date: str
     user_email: str

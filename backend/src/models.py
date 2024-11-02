@@ -8,7 +8,6 @@ class Task(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String, index=True)
     description = Column(String(150))
-    category = Column(String(100), default=None)
     is_completed = Column(Boolean, default = False)
     creation_date = Column(String(350))
     deadline = Column(String(350), default=None)

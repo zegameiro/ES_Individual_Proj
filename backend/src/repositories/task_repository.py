@@ -9,7 +9,9 @@ def create_task(task: TaskCreate, user_email: str, db_session: Session) -> Task:
     new_task = Task(
         title=task.title,
         description=task.description,
-        user_email=user_email
+        user_email=user_email,
+        priority=task.priority,
+        deadline=task.deadline
     )
 
     db_session.add(new_task)
@@ -30,6 +32,8 @@ def update_task(task: TaskSchema, task_id: int, db_session: Session) -> Task:
     task_to_update.title = task.title
     task_to_update.description = task.description
     task_to_update.is_completed = task.is_completed
+    task_to_update.priority = task.priority
+    task_to_update.deadline = task.deadline
 
     db_session.commit()
     db_session.refresh(task_to_update)
@@ -37,6 +41,7 @@ def update_task(task: TaskSchema, task_id: int, db_session: Session) -> Task:
 
 def get_tasks_from_user(user_email: str, db_session: Session) -> list[Task]:
     return db_session.query(Task).filter(Task.user_email == user_email).all()
+
 
 def delete_task(task_id: int, db_session: Session) -> bool:
     task_to_delete = db_session.query(Task).filter(Task.id == task_id).first()

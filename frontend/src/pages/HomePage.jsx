@@ -6,6 +6,7 @@ import { PiGraph } from "react-icons/pi";
 import AddTaskModal from "../components/AddTaskModal"
 import { getTasks } from "../api/taskActions";
 import TaskCard from "../components/TaskCard";
+import Legend from "../components/Legend";
 
 const HomePage = () => {
 
@@ -24,8 +25,9 @@ const HomePage = () => {
 				<h1 className="flex flex-row gap-2 items-center text-2xl font-bold"><PiGraph /> My Tasks</h1>
 				<Button onPress={onOpen} onClick={() => { setIsEdit(false); setCurrentTask() }}>Add a new Task</Button>
 			</div>
+			<Legend />
 			<div className="flex flex-col py-5">
-				<AddTaskModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} currentTask={currentTask} isEdit={isEdit} />
+				<AddTaskModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} currentTask={currentTask} isEdit={isEdit} setIsEdit={setIsEdit} setCurrentTask={setCurrentTask} />
 				<div className="flex flex-col space-y-4">
 
 					{tasks && tasks?.data?.length > 0 ? ( // Show the list of tasks organized by cards

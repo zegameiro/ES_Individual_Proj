@@ -3,9 +3,14 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..repositories.task_repository import create_task, get_tasks_from_user, update_task, delete_task
 from ..schemas import TaskCreate, TaskSchema
 from ..utils import authenticated, validate_credential
+from ..repositories.task_repository import (
+    create_task,
+    get_tasks_from_user,
+    update_task, 
+    delete_task
+)
 
 router = APIRouter()
 
