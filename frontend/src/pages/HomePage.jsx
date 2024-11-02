@@ -10,7 +10,7 @@ import TaskCard from "../components/TaskCard";
 const HomePage = () => {
 
 	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
-	const [currentTask, setCurrentTask] = useState({})
+	const [currentTask, setCurrentTask] = useState()
 	const [isEdit, setIsEdit] = useState(false)
 
 	const { data: tasks, isLoading: loadingTasks } = useQuery({
@@ -18,13 +18,11 @@ const HomePage = () => {
 		queryFn: () => getTasks()
 	})
 
-	console.log(tasks?.data)
-
 	return (
 		<div className="flex flex-col">
 			<div className="flex flex-row items-center justify-evenly">
 				<h1 className="flex flex-row gap-2 items-center text-2xl font-bold"><PiGraph /> My Tasks</h1>
-				<Button onPress={onOpen} onClick={() => { setIsEdit(false); setCurrentTask({}) }}>Add a new Task</Button>
+				<Button onPress={onOpen} onClick={() => { setIsEdit(false); setCurrentTask() }}>Add a new Task</Button>
 			</div>
 			<div className="flex flex-col py-5">
 				<AddTaskModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} currentTask={currentTask} isEdit={isEdit} />

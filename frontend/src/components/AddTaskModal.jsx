@@ -60,12 +60,9 @@ const AddTaskModal = ({ isOpen, onOpenChange, onClose, currentTask, isEdit }) =>
 		if (isEdit) {
 			setValue("title", currentTask.title, { shouldValidate: true })
 			setValue("description", currentTask.description, { shouldValidate: true })
-		}
+		} 
 
-	}, [currentTask, isEdit])
-
-	console.log(isEdit)
-	console.log(currentTask)
+	}, [isEdit])
 
 	return (
 		<Modal
@@ -76,7 +73,7 @@ const AddTaskModal = ({ isOpen, onOpenChange, onClose, currentTask, isEdit }) =>
 			<ModalContent>
 				{(onClose) => (
 					<>
-						<ModalHeader className="flex flex-col gap-1">Add a new Task</ModalHeader>
+						<ModalHeader className="flex flex-col gap-1">{isEdit ? "Edit task" : "Add a new Task"}</ModalHeader>
 						<form onSubmit={handleSubmit(onSubmit)}>
 							<ModalBody className="space-y-3">
 								<Input
@@ -121,7 +118,7 @@ const AddTaskModal = ({ isOpen, onOpenChange, onClose, currentTask, isEdit }) =>
 									</span>
 								) : addTaskMutation.isSuccess ? (
 									<span className="flex flex-row gap-1 w-full justify-center items-center text-success font-semibold">
-										<FaCircleCheck /> Task added with success
+										<FaCircleCheck /> Task {isEdit ? "edited" : "added"} with success
 									</span>
 								) : addTaskMutation.isError ? (
 									<span className="flex flex-row gap-1 w-full justify-center items-center text-error font-semibold">
