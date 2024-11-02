@@ -3,9 +3,15 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..repositories.task_repository import create_task, get_tasks_from_user, update_task, delete_task
 from ..schemas import TaskCreate, TaskSchema
 from ..utils import authenticated, validate_credential
+from ..repositories.task_repository import (
+    create_task,
+    get_tasks_from_user,
+    update_task, 
+    delete_task,
+    get_categories
+)
 
 router = APIRouter()
 
@@ -105,3 +111,22 @@ def delete_created_task(request: Request, task_id: int, db_session: Session = De
                 "message": "Task not found"
             }
         )
+    
+@router.get(
+    "/category",
+    description="Get all the categories already created by the user",
+    name="Get all categories"
+)
+@authenticated()
+def get_all_categories(request: Request, db_session: Session = Depends(get_db)) -> list[str]:
+
+    # Get the access token from the cookie in the request
+    credential = request.cookies.get('credential')
+
+    # Validate the access token
+    idinfo = validate_credential(credential)
+
+    # Get all categories
+    categories = get_categories(db_session=db_session)
+
+    return categories
