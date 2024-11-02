@@ -6,15 +6,15 @@ import { FiEdit3 } from "react-icons/fi";
 import { FaCheckCircle } from "react-icons/fa";
 import { BiSolidError } from "react-icons/bi";
 
-import { putUpdateTask } from "../api/taskActions";
+import { putUpdateTask, deleteTask } from "../api/taskActions";
 
-const TaskCard = ({ index, task }) => {
+const TaskCard = ({ index, task, onOpen, setCurrentTask, setIsEdit }) => {
 
     const queryClient = useQueryClient()
 
     const completeTaskMutation = useMutation({
         mutationKey: ["update-task", task.id],
-        mutationFn: () =>  {
+        mutationFn: () => {
             task.is_completed = true
             putUpdateTask(task)
         },
@@ -22,7 +22,14 @@ const TaskCard = ({ index, task }) => {
         onError: () => console.error("Failed to complete task")
     })
 
-    return (    
+    const deleteTaskMutation = useMutation({
+        mutationKey: ["delete-task", task.id],
+        mutationFn: () => deleteTask(task.id),
+        onSuccess: () => queryClient.invalidateQueries("getTasks"),
+        onError: () => console.error("Failed to delete task")
+    })
+
+    return (
         <Card className="max-w-[500px]" key={index}>
             <CardHeader className="flex flex-row justify-between items-center">
                 <p className="text-lg font-semibold">{task.title}</p>
@@ -38,27 +45,31 @@ const TaskCard = ({ index, task }) => {
             </CardBody>
             <Divider />
             <CardFooter className={!task.is_completed ? "justify-between" : "justify-end"}>
-                {completeTaskMutation.isError ? (
+                {completeTaskMutation.isError || deleteTaskMutation.isError ? (
                     <span className="flex flex-row gap-1 items-center text-error font-semibold">
                         <BiSolidError /> Error
                     </span>
-                ) : completeTaskMutation.isPending ? (
+                ) : completeTaskMutation.isPending || deleteTaskMutation.isPending ? (
                     <span className="flex flex-row gap-2 justify-center w-full items-center text-primary font-semibold">
                         <Spinner size="md" color="secondary" /> Loading
                     </span>
-                ) : !task.is_completed && (
-                    <Button color="success" className="text-md" variant="flat" size="sm" onClick={() => completeTaskMutation.mutate()}>
-                        <FaCheckCircle /> Complete Task
-                    </Button>
+                ) : (
+                    <>
+                        {!task.is_completed && (
+                            <Button color="success" className="text-md" variant="flat" size="sm" onClick={() => completeTaskMutation.mutate()}>
+                                <FaCheckCircle /> Complete Task
+                            </Button>
+                        )}
+                        <div className="flex flex-row gap-5">
+                            <Button color="primary" variant="light" onClick={() => { setCurrentTask(task); setIsEdit(true); onOpen() }}>
+                                <FiEdit3 />Edit
+                            </Button>
+                            <Button color="danger" onClick={() => deleteTaskMutation.mutate()}>
+                                <RiDeleteBin6Line /> Delete
+                            </Button>
+                        </div>
+                    </>
                 )}
-                <div className="flex flex-row gap-5">
-                    <Button color="primary" variant="light">
-                        <FiEdit3 />Edit
-                    </Button>
-                    <Button color="danger">
-                        <RiDeleteBin6Line /> Delete
-                    </Button>
-                </div>
             </CardFooter>
         </Card>
     )

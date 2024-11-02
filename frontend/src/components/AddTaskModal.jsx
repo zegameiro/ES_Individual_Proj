@@ -11,26 +11,32 @@ import {
 } from "@nextui-org/react"
 import { useForm } from "react-hook-form"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useEffect } from "react"
 
 import { MdError } from "react-icons/md";
 import { FaCircleCheck } from "react-icons/fa6";
 
-import { postAddTask } from "../api/taskActions"
+import { postAddTask, putUpdateTask } from "../api/taskActions"
 
-const AddTaskModal = ({ isOpen, onOpen, onOpenChange, onClose }) => {
+const AddTaskModal = ({ isOpen, onOpenChange, onClose, currentTask, isEdit }) => {
 
-	const { register, handleSubmit, reset, formState: { errors } } = useForm()
+	const { register, handleSubmit, reset, formState: { errors }, setValue } = useForm()
 
 	const queryClient = useQueryClient()
 
 	const onSubmit = (data) => {
-		console.log(data)
-		addTaskMutation.mutate(data)
+
+		if (isEdit) { 
+			currentTask.title = data.title
+			currentTask.description = data.description
+		}
+
+		addTaskMutation.mutate(isEdit ? currentTask : data)
 	}
 
 	const addTaskMutation = useMutation({
 		mutationKey: ['addTask'],
-		mutationFn: (data) => postAddTask(data),
+		mutationFn: (data) => isEdit ? putUpdateTask(data) : postAddTask(data),
 		onSuccess: () => {
 			setTimeout(() => {
 				reset()
@@ -40,14 +46,23 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange, onClose }) => {
 			}, 1000)
 		},
 		onError: () => {
-            console.error("Failed to add task")
+			console.error("Failed to add task")
 			setTimeout(() => {
 				onClose()
 				reset()
 				addTaskMutation.reset()
 			}, 1000)
-        }
+		}
 	})
+
+	useEffect(() => {
+
+		if (isEdit) {
+			setValue("title", currentTask.title, { shouldValidate: true })
+			setValue("description", currentTask.description, { shouldValidate: true })
+		} 
+
+	}, [isEdit])
 
 	return (
 		<Modal
@@ -58,7 +73,7 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange, onClose }) => {
 			<ModalContent>
 				{(onClose) => (
 					<>
-						<ModalHeader className="flex flex-col gap-1">Add a new Task</ModalHeader>
+						<ModalHeader className="flex flex-col gap-1">{isEdit ? "Edit task" : "Add a new Task"}</ModalHeader>
 						<form onSubmit={handleSubmit(onSubmit)}>
 							<ModalBody className="space-y-3">
 								<Input
@@ -66,8 +81,7 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange, onClose }) => {
 										required: "Missing title for the Task",
 										maxLength: { value: 100, message: "Max length is 100 characters" },
 										minLength: { value: 5, message: "Title is required to have at least 5 characters" }
-									}
-									)}
+									})}
 									isRequired
 									isClearable
 									isInvalid={errors.title}
@@ -77,6 +91,7 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange, onClose }) => {
 									errorMessage={errors.title?.message}
 									placeholder="Enter a title for your task"
 									labelPlacement="outside"
+									defaultValue={isEdit ? currentTask?.title : ""}
 									onClear={() => console.log("input cleared")}
 								/>
 								<Textarea
@@ -92,6 +107,7 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange, onClose }) => {
 									color={errors.description ? "danger" : "primary"}
 									errorMessage={errors.description?.message}
 									labelPlacement="outside"
+									defaultValue={isEdit ? currentTask?.description : ""}
 									placeholder="Enter a description for your task"
 								/>
 							</ModalBody>
@@ -102,7 +118,7 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange, onClose }) => {
 									</span>
 								) : addTaskMutation.isSuccess ? (
 									<span className="flex flex-row gap-1 w-full justify-center items-center text-success font-semibold">
-										<FaCircleCheck /> Task added with success
+										<FaCircleCheck /> Task {isEdit ? "edited" : "added"} with success
 									</span>
 								) : addTaskMutation.isError ? (
 									<span className="flex flex-row gap-1 w-full justify-center items-center text-error font-semibold">
@@ -114,7 +130,7 @@ const AddTaskModal = ({ isOpen, onOpen, onOpenChange, onClose }) => {
 											Close
 										</Button>
 										<Button color="secondary" type="submit">
-											Add Task
+											{isEdit ? "Edit Task" : "Add Task"}
 										</Button>
 									</>
 								)}

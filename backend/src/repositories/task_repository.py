@@ -37,3 +37,14 @@ def update_task(task: TaskSchema, task_id: int, db_session: Session) -> Task:
 
 def get_tasks_from_user(user_email: str, db_session: Session) -> list[Task]:
     return db_session.query(Task).filter(Task.user_email == user_email).all()
+
+def delete_task(task_id: int, db_session: Session) -> bool:
+    task_to_delete = db_session.query(Task).filter(Task.id == task_id).first()
+
+    if task_to_delete is None:
+        return False
+
+    db_session.delete(task_to_delete)
+    db_session.commit()
+
+    return True
