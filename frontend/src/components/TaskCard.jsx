@@ -8,7 +8,7 @@ import { BiSolidError } from "react-icons/bi";
 
 import { putUpdateTask, deleteTask } from "../api/taskActions";
 
-const TaskCard = ({ index, task }) => {
+const TaskCard = ({ index, task, onOpen, setCurrentTask, setIsEdit }) => {
 
     const queryClient = useQueryClient()
 
@@ -45,37 +45,31 @@ const TaskCard = ({ index, task }) => {
             </CardBody>
             <Divider />
             <CardFooter className={!task.is_completed ? "justify-between" : "justify-end"}>
-                {completeTaskMutation.isError ? (
+                {completeTaskMutation.isError || deleteTaskMutation.isError ? (
                     <span className="flex flex-row gap-1 items-center text-error font-semibold">
                         <BiSolidError /> Error
                     </span>
-                ) : completeTaskMutation.isPending ? (
+                ) : completeTaskMutation.isPending || deleteTaskMutation.isPending ? (
                     <span className="flex flex-row gap-2 justify-center w-full items-center text-primary font-semibold">
                         <Spinner size="md" color="secondary" /> Loading
                     </span>
-                ) : !task.is_completed && (
-                    <Button color="success" className="text-md" variant="flat" size="sm" onClick={() => completeTaskMutation.mutate()}>
-                        <FaCheckCircle /> Complete Task
-                    </Button>
+                ) : (
+                    <>
+                        {!task.is_completed && (
+                            <Button color="success" className="text-md" variant="flat" size="sm" onClick={() => completeTaskMutation.mutate()}>
+                                <FaCheckCircle /> Complete Task
+                            </Button>
+                        )}
+                        <div className="flex flex-row gap-5">
+                            <Button color="primary" variant="light" onClick={() => { setCurrentTask(task); setIsEdit(true); onOpen() }}>
+                                <FiEdit3 />Edit
+                            </Button>
+                            <Button color="danger" onClick={() => deleteTaskMutation.mutate()}>
+                                <RiDeleteBin6Line /> Delete
+                            </Button>
+                        </div>
+                    </>
                 )}
-                <div className="flex flex-row gap-5">
-                    <Button color="primary" variant="light">
-                        <FiEdit3 />Edit
-                    </Button>
-                    {deleteTaskMutation.isError ? (
-                        <span className="flex flex-row gap-1 items-center text-error font-semibold">
-                            <BiSolidError /> Error
-                        </span>
-                    ) : deleteTaskMutation.isPending ? (
-                        <span className="flex flex-row gap-2 justify-center w-full items-center text-primary font-semibold">
-                            <Spinner size="md" color="secondary" /> Loading
-                        </span>
-                    ) : (
-                        <Button color="danger" onClick={() => deleteTaskMutation.mutate()}>
-                            <RiDeleteBin6Line /> Delete
-                        </Button>
-                    )}
-                </div>
             </CardFooter>
         </Card>
     )
