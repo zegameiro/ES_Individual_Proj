@@ -7,6 +7,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { BiSolidError } from "react-icons/bi";
 
 import { putUpdateTask, deleteTask } from "../api/taskActions";
+import { formatTimestamp } from "../utils"
 
 const TaskCard = ({ index, task, onOpen, setCurrentTask, setIsEdit }) => {
 
@@ -41,7 +42,17 @@ const TaskCard = ({ index, task, onOpen, setCurrentTask, setIsEdit }) => {
             </CardHeader>
             <Divider />
             <CardBody>
-                <p>{task.description}</p>
+                <div className="flex flex-col space-y-3">
+                    <p>{task.description}</p>
+                    <div className="flex flex-row space-x-10">
+                        <span>
+                            <h2 className="font-semibold text-sm">Created at</h2> {formatTimestamp(task.creation_date)}
+                        </span>
+                        <span>
+                            <h2 className="font-semibold text-sm">Deadline</h2> {task.deadline}
+                        </span>
+                    </div>
+                </div>
             </CardBody>
             <Divider />
             <CardFooter className={!task.is_completed ? "justify-between" : "justify-end"}>
