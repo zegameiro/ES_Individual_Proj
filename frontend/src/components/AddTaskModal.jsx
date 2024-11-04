@@ -9,11 +9,13 @@ import {
 	Textarea,
 	Spinner,
 	RadioGroup,
-	Radio
+	Radio,
+	DatePicker
 } from "@nextui-org/react"
 import { useForm } from "react-hook-form"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
+import { getLocalTimeZone, parseDate, today } from "@internationalized/date";
 
 import { MdError } from "react-icons/md";
 import { FaCircleCheck } from "react-icons/fa6";
@@ -22,16 +24,18 @@ import { postAddTask, putUpdateTask } from "../api/taskActions"
 
 const AddTaskModal = ({ isOpen, onOpenChange, onClose, currentTask, isEdit, setIsEdit, setCurrentTask }) => {
 
-	const { register, handleSubmit, reset, formState: { errors }, setValue } = useForm()
+	const { register, handleSubmit, reset, formState: { errors }, setValue, watch } = useForm()
 	const [selected, setSelected] = useState()
+	const [taskDeadline, setTaskDeadline] = useState()
 	const queryClient = useQueryClient()
-	
+
 	const onSubmit = (data) => {
 
 		if (isEdit) {
 			currentTask.title = data.title
 			currentTask.description = data.description
 			currentTask.priority = data.priority
+			currentTask.deadline = data.deadline
 		}
 
 		addTaskMutation.mutate(isEdit ? currentTask : data)
@@ -65,12 +69,21 @@ const AddTaskModal = ({ isOpen, onOpenChange, onClose, currentTask, isEdit, setI
 			setValue("description", currentTask.description, { shouldValidate: true })
 			setValue("priority", currentTask.priority, { shouldValidate: true })
 			setSelected(currentTask.priority)
-			console.log("bacalhau")
 		} else {
 			setSelected()
 		}
 
-	}, [isEdit])
+		if (taskDeadline != undefined || taskDeadline != null || taskDeadline?.length > 0) {
+			console.log(taskDeadline)
+
+			const deadline_day = String(taskDeadline?.day).padStart(2, '0')
+			const deadline_month = String(taskDeadline?.month).padStart(2, '0')
+
+			const deadline_date = `${taskDeadline?.year}-${deadline_month}-${deadline_day}`
+			setValue("deadline", deadline_date, { shouldValidate: true })
+		}
+
+	}, [isEdit, taskDeadline])
 
 	return (
 		<Modal
@@ -121,9 +134,26 @@ const AddTaskModal = ({ isOpen, onOpenChange, onClose, currentTask, isEdit, setI
 									defaultValue={isEdit ? currentTask?.description : ""}
 									placeholder="Enter a description for your task"
 								/>
+
+								<DatePicker
+									{...register("deadline", {
+										required: "Missing deadline for task",
+									})}
+									isRequired
+									isInvalid={errors.deadline}
+									defaultValue={isEdit ? parseDate(currentTask?.deadline) : undefined}
+									color={errors.deadline ? "danger" : "primary"}
+									errorMessage={errors.deadline?.message}
+									label="Deadline"
+									variant="underlined"
+									labelPlacement="outside"
+									minValue={today(getLocalTimeZone())}
+									onChange={setTaskDeadline}
+									showMonthAndYearPickers
+								/>
+
 								<RadioGroup
 									color={errors.priority ? "danger" : "primary"}
-									isRequired
 									value={selected}
 									onValueChange={setSelected}
 									isInvalid={errors.priority}
@@ -146,7 +176,7 @@ const AddTaskModal = ({ isOpen, onOpenChange, onClose, currentTask, isEdit, setI
 										value="medium"
 									>Medium</Radio>
 									<Radio
-									    {...register("priority", {
+										{...register("priority", {
 											required: "Missing priority for the Task"
 										})}
 										onChange={(e) => setValue("priority", e.target?.value)}
