@@ -22,7 +22,7 @@ const LoginPage = () => {
 	const successLogin = (response) => {
 		const credentials = jwtDecode(response.credential)
 
-		setCookie("credential", response.credential)
+		setCookie("credential", response.credential, { path: "/" })
 		setLoginState(0)
 		loginStore(credentials.name, credentials.picture)
 
