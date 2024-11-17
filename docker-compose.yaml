@@ -20,9 +20,9 @@ services:
       - "5432:5432"
 
   backend:
-    depends_on:
-      database_postgresql:
-        condition: service_healthy
+    # depends_on:
+    #   database_postgresql:
+    #     condition: service_healthy
     build: 
       context: ./backend
       dockerfile: Dockerfile 

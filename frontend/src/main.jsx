@@ -8,8 +8,8 @@ import { CookiesProvider } from 'react-cookie'
 import App from './App.jsx'
 import './index.css'
 
+const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const queryClient = new QueryClient()
-const clientId = "361591895069-pa7roahi6mo5jt67hujp335ivhjeh3fs.apps.googleusercontent.com"
 
 createRoot(document.getElementById('root')).render(
   <GoogleOAuthProvider clientId={clientId} >
