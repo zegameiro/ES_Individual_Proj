@@ -4,8 +4,8 @@ export const postAddTask = (data) => {
     return axios.post("/task", data)
 }
 
-export const getTasks = () => {
-    return axios.get("/task")
+export const getTasks = (filter_by, sort_by, sort_order) => {
+    return axios.get(`/task?filter_by=${filter_by}&sort_by=${sort_by}&sort_order=${sort_order}`)
 }
 
 export const putUpdateTask = (data) => {

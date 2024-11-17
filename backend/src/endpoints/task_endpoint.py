@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from typing import Optional
 
 from ..database import get_db
 from ..schemas import TaskCreate, TaskSchema
@@ -16,7 +17,7 @@ router = APIRouter()
 
 @router.post(
     '', 
-    description="Add a new task and associate it with a user. Its required to send the access token in the request",
+    description="Add a new task and associate it with a user. Its required to send the access token in the request.",
     name="Add a new Task"
 )
 @authenticated()
@@ -40,11 +41,11 @@ def add_new_task(request: Request, task: TaskCreate, db_session: Session = Depen
 
 @router.get(
     '',
-    description="Get tasks associated with a user. Its required to be authenticated",
+    description="Get tasks associated with a user. Its required to be authenticated. It also includes sort and filter parameters",
     name="Get tasks from user"
 )
 @authenticated()
-def get_tasks(request: Request, db_session: Session = Depends(get_db)):
+def get_tasks(request: Request, filter_by: Optional[str] = None, sort_by: Optional[str] = None, sort_order: Optional[str] = None, db_session: Session = Depends(get_db)):
 
     # Get the access token from the cookie in the request
     credential = request.cookies.get('credential')
@@ -53,7 +54,13 @@ def get_tasks(request: Request, db_session: Session = Depends(get_db)):
     idinfo = validate_credential(credential)
 
     # Get tasks associated with the user
-    tasks = get_tasks_from_user(user_email=idinfo.get("email"), db_session=db_session)
+    tasks = get_tasks_from_user(
+        user_email=idinfo.get("email"), 
+        filter_by=filter_by, 
+        sort_by=sort_by, 
+        sort_order=sort_order, 
+        db_session=db_session
+    )
 
     return tasks
 
