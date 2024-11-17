@@ -107,7 +107,7 @@ const HomePage = () => {
 					) : tasks && tasks?.data?.length > 0 ? ( // Show the list of tasks organized by cards
 						<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
 							{tasks.data.map((task, index) => (
-								<TaskCard key={index} task={task} onOpen={onOpen} setCurrentTask={setCurrentTask} setIsEdit={setIsEdit} />
+								<TaskCard key={index} task={task} onOpen={onOpen} setCurrentTask={setCurrentTask} setIsEdit={setIsEdit} setIsLoading2={setIsLoading2} />
 							))}
 						</div>
 

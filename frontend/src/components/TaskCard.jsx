@@ -9,17 +9,23 @@ import { BiSolidError } from "react-icons/bi";
 import { putUpdateTask, deleteTask } from "../api/taskActions";
 import { formatTimestamp } from "../utils"
 
-const TaskCard = ({ index, task, onOpen, setCurrentTask, setIsEdit }) => {
+const TaskCard = ({ index, task, onOpen, setCurrentTask, setIsEdit, setIsLoading2 }) => {
 
     const queryClient = useQueryClient()
 
     const completeTaskMutation = useMutation({
         mutationKey: ["update-task", task.id],
         mutationFn: () => {
+            setIsLoading2(true)
             task.is_completed = true
             putUpdateTask(task)
         },
-        onSuccess: () => queryClient.invalidateQueries("getTasks"),
+        onSuccess: () => {
+            setTimeout(() => {
+                queryClient.invalidateQueries("getTasks")
+                setIsLoading2(false)
+            }, 1000)
+        },
         onError: () => console.error("Failed to complete task")
     })
 
