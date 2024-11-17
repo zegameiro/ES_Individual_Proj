@@ -17,7 +17,7 @@ router = APIRouter()
 
 @router.post(
     '', 
-    description="Add a new task and associate it with a user. Its required to send the access token in the request",
+    description="Add a new task and associate it with a user. Its required to send the access token in the request.",
     name="Add a new Task"
 )
 @authenticated()
@@ -41,7 +41,7 @@ def add_new_task(request: Request, task: TaskCreate, db_session: Session = Depen
 
 @router.get(
     '',
-    description="Get tasks associated with a user. Its required to be authenticated",
+    description="Get tasks associated with a user. Its required to be authenticated. It also includes sort and filter parameters",
     name="Get tasks from user"
 )
 @authenticated()
@@ -52,10 +52,6 @@ def get_tasks(request: Request, filter_by: Optional[str] = None, sort_by: Option
 
     # Validate the access token
     idinfo = validate_credential(credential)
-
-    print("Filter by: ", filter_by)
-    print("Sort by: ", sort_by)
-    print("Sort order: ", sort_order)
 
     # Get tasks associated with the user
     tasks = get_tasks_from_user(

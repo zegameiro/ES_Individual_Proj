@@ -56,12 +56,12 @@ const HomePage = () => {
 				<h1 className="flex flex-row gap-2 items-center text-2xl font-bold"><PiGraph /> My Tasks</h1>
 				<Button onPress={onOpen} onClick={() => { setIsEdit(false); setCurrentTask() }}>Add a new Task</Button>
 			</div>
-			<div className="flex flex-col lg:flex-row lg:justify-between pt-5">
+			<div className="flex flex-col pt-2">
 				<Legend />
-				<div className="flex flex-row lg:space-x-5">
+				<div className="flex flex-row space-x-5">
 					<Select
 						labelPlacement="outside"
-						className="pb-5 w-[10vw]"
+						className="pb-5"
 						variant="underlined"
 						label="Filter Tasks"
 						selectedKeys={[filterOption]}
@@ -75,7 +75,7 @@ const HomePage = () => {
 					</Select>
 					<Select
 						labelPlacement="outside"
-						className="pb-5 w-[10vw]"
+						className="pb-5"
 						variant="underlined"
 						label="Sort Tasks"
 						selectedKeys={[`${sortOption}_${sortOrder}`]}
