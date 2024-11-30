@@ -18,8 +18,6 @@ PASSWORD = os.getenv('POSTGRES_PASSWORD')
 DATABASE = os.getenv('POSTGRES_DB')
 CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 
-print(HOST, "\n", PORT, "\n", PASSWORD, "\n", DATABASE, "\n", CLIENT_ID)
-
 def get_postgres_info():
     return {
         "host": HOST,

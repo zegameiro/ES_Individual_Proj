@@ -26,7 +26,7 @@ app = FastAPI(
     license_info = {"name": "MIT License", "url": "https://opensource.org/licenses/MIT"}
 )
 
-origins = ["http://localhost:3000", "https://localhost:3000"]
+origins = ["http://localhost:3000", "https://es-ua.ddns.net"]
 
 app.add_middleware(
     CORSMiddleware,
