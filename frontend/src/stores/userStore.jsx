@@ -7,13 +7,14 @@ export const useUserStore = create(
 			user_name: "",
 			picture_url: "",
 			isLoggedIn: false,
+			credential: "",
 
-			login: (user_name, picture_url) => {
-				set({ user_name: user_name, picture_url: picture_url, isLoggedIn: true });
+			login: (user_name, picture_url, credential) => {
+				set({ user_name: user_name, picture_url: picture_url, isLoggedIn: true, credential: credential });
 			},
 
 			logout: () => {
-				set({ first_name: "", last_name: "", picture_url: "", isLoggedIn: false });
+				set({ first_name: "", last_name: "", picture_url: "", isLoggedIn: false, credential: "" });
 			},
 		}
 	),

@@ -8,17 +8,19 @@ import { BiSolidError } from "react-icons/bi";
 
 import { putUpdateTask, deleteTask } from "../api/taskActions";
 import { formatTimestamp } from "../utils"
+import { useUserStore } from "../stores/userStore"
 
 const TaskCard = ({ index, task, onOpen, setCurrentTask, setIsEdit, setIsLoading2 }) => {
 
     const queryClient = useQueryClient()
+    const credential = useUserStore((state) => state.credential) || false
 
     const completeTaskMutation = useMutation({
         mutationKey: ["update-task", task.id],
         mutationFn: () => {
             setIsLoading2(true)
             task.is_completed = true
-            putUpdateTask(task)
+            putUpdateTask(task, credential)
         },
         onSuccess: () => {
             setTimeout(() => {
@@ -31,7 +33,7 @@ const TaskCard = ({ index, task, onOpen, setCurrentTask, setIsEdit, setIsLoading
 
     const deleteTaskMutation = useMutation({
         mutationKey: ["delete-task", task.id],
-        mutationFn: () => deleteTask(task.id),
+        mutationFn: () => deleteTask(task.id, credential),
         onSuccess: () => queryClient.invalidateQueries("getTasks"),
         onError: () => console.error("Failed to delete task")
     })

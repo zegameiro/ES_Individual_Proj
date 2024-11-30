@@ -21,6 +21,7 @@ import { MdError } from "react-icons/md";
 import { FaCircleCheck } from "react-icons/fa6";
 
 import { postAddTask, putUpdateTask } from "../api/taskActions"
+import { useUserStore } from "../stores/userStore";
 
 const AddTaskModal = ({ isOpen, onOpenChange, onClose, currentTask, isEdit, setIsEdit, setCurrentTask }) => {
 
@@ -28,6 +29,7 @@ const AddTaskModal = ({ isOpen, onOpenChange, onClose, currentTask, isEdit, setI
 	const [selected, setSelected] = useState()
 	const [taskDeadline, setTaskDeadline] = useState()
 	const queryClient = useQueryClient()
+	const credential = useUserStore((state) => state.credential) || false
 
 	const onSubmit = (data) => {
 
@@ -43,7 +45,7 @@ const AddTaskModal = ({ isOpen, onOpenChange, onClose, currentTask, isEdit, setI
 
 	const addTaskMutation = useMutation({
 		mutationKey: ['addTask'],
-		mutationFn: (data) => isEdit ? putUpdateTask(data) : postAddTask(data),
+		mutationFn: (data) => isEdit ? putUpdateTask(data, credential) : postAddTask(data, credential),
 		onSuccess: () => {
 			setTimeout(() => {
 				reset()

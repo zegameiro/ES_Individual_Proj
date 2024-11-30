@@ -6,14 +6,19 @@ from google.auth.transport.requests import Request as GoogleRequest
 
 import os
 
-load_dotenv()
+if os.getenv("ENVIRONMENT") == "production":
+    load_dotenv(".env.prod")
+else:
+    load_dotenv(".env")
 
-HOST = os.getenv('POSTGRES_HOST', 'localhost')
-PORT = os.getenv('POSTGRES_PORT', '5432')
-USER = os.getenv('POSTGRES_USER', 'taskflow_admin')
-PASSWORD = os.getenv('POSTGRES_PASSWORD', 'taskflow_admin_password')
-DATABASE = os.getenv('POSTGRES_DATABASE', 'taskflow_db')
+HOST = os.getenv('POSTGRES_HOST')
+PORT = os.getenv('POSTGRES_PORT')
+USER = os.getenv('POSTGRES_USER')
+PASSWORD = os.getenv('POSTGRES_PASSWORD')
+DATABASE = os.getenv('POSTGRES_DB')
 CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+
+print(HOST, "\n", PORT, "\n", PASSWORD, "\n", DATABASE, "\n", CLIENT_ID)
 
 def get_postgres_info():
     return {
@@ -46,7 +51,7 @@ def authenticated():
 
             request = kwargs.get("request", None)
 
-            access_token = request.cookies.get("credential")
+            access_token = request.headers.get("Credential")
 
             if not access_token:
                 raise HTTPException(
