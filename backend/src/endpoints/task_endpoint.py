@@ -24,7 +24,7 @@ router = APIRouter()
 def add_new_task(request: Request, task: TaskCreate, db_session: Session = Depends(get_db)):
 
     # Get the access token from the cookie in the request
-    credential = request.cookies.get('credential')
+    credential = request.headers.get('Credential')
 
     # Validate the access token
     idinfo = validate_credential(credential)
@@ -48,7 +48,7 @@ def add_new_task(request: Request, task: TaskCreate, db_session: Session = Depen
 def get_tasks(request: Request, filter_by: Optional[str] = None, sort_by: Optional[str] = None, sort_order: Optional[str] = None, db_session: Session = Depends(get_db)):
 
     # Get the access token from the cookie in the request
-    credential = request.cookies.get('credential')
+    credential = request.headers.get('Credential')
 
     # Validate the access token
     idinfo = validate_credential(credential)
@@ -73,7 +73,7 @@ def get_tasks(request: Request, filter_by: Optional[str] = None, sort_by: Option
 def update_created_task(request: Request, task: TaskSchema, db_session: Session = Depends(get_db)):
 
     # Get the access token from the cookie in the request
-    credential = request.cookies.get('credential')
+    credential = request.headers.get('Credential')
 
     # Validate the access token
     idinfo = validate_credential(credential)
@@ -97,7 +97,7 @@ def update_created_task(request: Request, task: TaskSchema, db_session: Session 
 def delete_created_task(request: Request, task_id: int, db_session: Session = Depends(get_db)):
 
     # Get the access token from the cookie in the request
-    credential = request.cookies.get('credential')
+    credential = request.headers.get('Credential')
 
     # Validate the access token
     idinfo = validate_credential(credential)

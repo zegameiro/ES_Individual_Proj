@@ -1,8 +1,7 @@
 import { useState } from "react"
-import { Divider, Link, Spinner } from "@nextui-org/react"
+import { Divider, Link } from "@nextui-org/react"
 import { GoogleLogin } from "@react-oauth/google"
 import { useNavigate } from "react-router-dom"
-import { useCookies } from "react-cookie"
 import { jwtDecode } from "jwt-decode"
 
 import { MdError } from "react-icons/md";
@@ -15,16 +14,14 @@ const LoginPage = () => {
 
 	const navigate = useNavigate()
 	const [loginState, setLoginState] = useState() // 0 - login successfull; 1 - login failure
-	const [_cookies, setCookie] = useCookies(['credential'])
 	const loginStore = useUserStore((state) => state.login) || false;
 	const isLoggedIn = useUserStore((state) => state.isLoggedIn) || false;
 
 	const successLogin = (response) => {
 		const credentials = jwtDecode(response.credential)
 
-		setCookie("credential", response.credential, { path: "/" })
 		setLoginState(0)
-		loginStore(credentials.name, credentials.picture)
+		loginStore(credentials.name, credentials.picture, response.credential)
 
 		setTimeout(() => {
 			navigate("/home")

@@ -20,19 +20,13 @@ services:
       - "5432:5432"
 
   backend:
-    # depends_on:
-    #   database_postgresql:
-    #     condition: service_healthy
+    depends_on:
+      database_postgresql:
+        condition: service_healthy
     build: 
       context: ./backend
       dockerfile: Dockerfile 
-    environment:
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+    env_file: ".env"
     ports:
       - "8000:8000"
     volumes:

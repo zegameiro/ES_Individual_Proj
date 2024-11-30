@@ -7,7 +7,8 @@ import AddTaskModal from "../components/AddTaskModal"
 import { getTasks } from "../api/taskActions";
 import TaskCard from "../components/TaskCard";
 import Legend from "../components/Legend";
-import { useFilterSortStore } from "../stores/filterStore";
+import { useFilterSortStore, } from "../stores/filterStore";
+import { useUserStore } from "../stores/userStore";
 
 const HomePage = () => {
 
@@ -23,11 +24,12 @@ const HomePage = () => {
 	const [currentTask, setCurrentTask] = useState()
 	const [isEdit, setIsEdit] = useState(false)
 	const [isLoading2, setIsLoading2] = useState(false)
+	const credential = useUserStore((state) => state.credential) || false
 
 
 	const { data: tasks, isLoading: loadingTasks } = useQuery({
 		queryKey: ["getTasks"],
-		queryFn: () => getTasks(filterOption, sortOption, sortOrder)
+		queryFn: () => getTasks(filterOption, sortOption, sortOrder, credential)
 	})
 
 	const handleFiltersChange = (e) => {
