@@ -12,12 +12,12 @@ services:
     volumes:
       - ./backend:/backend
 
-    frontend:
-      build:
-      context: ./frontend
-      dockerfile: Dockerfile.prod
-      ports:
-        - "3000:3000"
-      volumes:
-        - ./frontend:/frontend
-        - /frontend/node_modules
+  frontend:
+    build:
+    context: ./frontend
+    dockerfile: Dockerfile.prod
+    ports:
+      - "4173:4173"
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules
