@@ -8,6 +8,6 @@ COPY . .
 
 RUN pnpm install
 
-EXPOSE 4173
+EXPOSE 3000
 
 ENTRYPOINT ["pnpm", "dev"]
