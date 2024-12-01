@@ -1,16 +1,15 @@
-import { create } from "zustand"
+import { create } from "zustand";
 
 export const useFilterSortStore = create((set) => ({
-    filterOption: "",
-    sortOption: "",
-    sortOrder: "",
+  filterOption: "",
+  sortOption: "",
+  sortOrder: "",
 
-    setFilterOption: (option) => {
-        set({ filterOption: option })
-    },
+  setFilterOption: (option) => {
+    set({ filterOption: option });
+  },
 
-    setSortOptions: (option, order) => {
-        set({ sortOption: option, sortOrder: order })
-    }
-
-}))
+  setSortOptions: (option, order) => {
+    set({ sortOption: option, sortOrder: order });
+  },
+}));
