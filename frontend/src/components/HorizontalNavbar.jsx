@@ -5,14 +5,13 @@ import {
   NavbarItem,
   Link,
   Button,
-} from "@nextui-org/react"
+} from "@nextui-org/react";
 
-import { LogoHorizontal } from "../assets"
-import ProfileComponent from "./ProfileComponent"
-import { useUserStore } from "../stores/userStore"
+import { LogoHorizontal } from "../assets";
+import ProfileComponent from "./ProfileComponent";
+import { useUserStore } from "../stores/userStore";
 
 const HorizontalNavBar = () => {
-
   const isLoggedIn = useUserStore((state) => state.isLoggedIn) || false;
 
   return (
@@ -30,14 +29,20 @@ const HorizontalNavBar = () => {
           {isLoggedIn ? (
             <ProfileComponent />
           ) : (
-            <Button as={Link} color="primary" href="/login" variant="ghost" className="text-lg">
+            <Button
+              as={Link}
+              color="primary"
+              href="/login"
+              variant="ghost"
+              className="text-lg"
+            >
               Login
             </Button>
           )}
         </NavbarItem>
       </NavbarContent>
     </Navbar>
-  )
-}
+  );
+};
 
-export default HorizontalNavBar
+export default HorizontalNavBar;
