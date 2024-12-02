@@ -17,7 +17,7 @@ router = APIRouter()
 
 @router.post(
     '', 
-    description="Add a new task and associate it with a user. Its required to send the access token in the request.",
+    description="Add a new task and associate it with a user. Its required to send the access token in the headers.",
     name="Add a new Task"
 )
 @authenticated()
@@ -90,7 +90,7 @@ def update_created_task(request: Request, task: TaskSchema, db_session: Session 
 
 @router.delete(
     "",
-    description="Delete a task that a user previously created, its required to send the jwtToken in the cookie",
+    description="Delete a task that a user previously created, its required to send the jwtToken in the headers",
     name="Delete a Task"
 )
 @authenticated()

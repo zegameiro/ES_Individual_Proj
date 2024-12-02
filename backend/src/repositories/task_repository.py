@@ -73,10 +73,10 @@ def get_tasks_from_user(user_email: str, sort_by: str, sort_order: str, filter_b
         case "completed":
 
             if sort_order == "asc":
-                found_tasks.sort(key = lambda x: x.is_completed)
+                found_tasks.sort(key = lambda x: x.is_completed, reverse = True)
 
             else:
-                found_tasks.sort(key = lambda x: x.is_completed, reverse = True)
+                found_tasks.sort(key = lambda x: x.is_completed)
 
         case "title": 
 
